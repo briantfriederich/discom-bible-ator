@@ -28,8 +28,8 @@ seah,quarts,7.7,liters,7.3,
 ephah,gallons,5.9,liters,22,
 lethech,gallons,29,liters,110,
 denarius,USD,$3.62 ,USD,$3.62 ,
-drachma,USD,$94.50 ,USD,$94.50 ,ot
-drachma,USD,$0.65 ,USD,$0.65 ,nt
+daric,USD,$94.50 ,USD,$94.50 ,
+drachma,USD,$0.65 ,USD,$0.65 ,
 didrachma,USD,$1.30 ,USD,$1.30 ,
 talent,USD,"$16,500 ",USD,"$16,500 ",silver
 talent,USD,"$1,400,116.57 ",USD,"$1,400,116.57 ",gold
