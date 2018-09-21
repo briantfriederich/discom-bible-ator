@@ -3,84 +3,102 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 from reference_lists import Reference_Lists
 
-measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0, squeeze=True).to_dict()
+measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
+                        squeeze=True).to_dict()
 
-measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0, index_col=1, squeeze=True).to_dict()
+measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0,
+                                index_col=1, squeeze=True).to_dict()
 
 class Concat_Multiword(object):
 
-        """Method finding and concatenating tokenized multi-word measure words.
+    """Method finding and concatenating tokenized multi-word measure words.
+
+    Attributes:
+        __init__
+        run(arr)
+
+    """
+
+    def __init__(self, arr):
+        """Method initializing Concat_Multiword
 
         Args:
-            arr (arr):
+            arr (arr)
 
         Attributes:
-            __init__
-            run(arr)
-
+            arr (arr): array of word-tokenized words and symbols
+            has_multiword (bool): checks for presence of potential
+                multiword-measure words through list of multiword_signifiers
+            signifiers (arr): list of multiword_signifiers present in arr
+            ordinal (arr): list of ordinal_times signifiers to check
         """
+        self.arr = arr
+        self.has_multiword = any(np.intersect1d(arr, Reference_Lists.multiword_signifiers))
+        self.signifiers = set(arr).intersection(Reference_Lists.multiword_signifiers)
+        self.ordinal = Reference_Lists.ordinal_times
 
-        def __init__(self, arr):
-            """Method initializing Concat_Multiword
+    def run(self):
+        """Method to concatenate multi-word measure words into one Array
+        item
 
-            Args:
-                arr (arr)
-
-            Attributes:
-                arr (arr): array of word-tokenized words and symbols
-                has_multiword (bool): checks for presence of potential
-                    multiword-measure words through list of multiword_signifiers
-                signifiers (arr): list of multiword_signifiers present in arr
-                ordinal (arr): list of ordinal_times signifiers to check
-            """
-            self.arr = arr
-            self.has_multiword = any(np.intersect1d(arr, Reference_Lists.multiword_signifiers))
-            self.signifiers = set(arr).intersection(Reference_Lists.multiword_signifiers)
-            self.ordinal = Reference_Lists.ordinal_times
-
-        def run(self, arr):
-            """Method to concatenate multi-word measure words into one Array
-            itemself.
-
-            args:
-                arr (arr): array of tokenized words
-
-            returns:
-                arr (arr): array of words with multiword tokens joined
-            """
-            if self.has_multiword == True:
-                for i, j in enumerate(self.arr):
-                    if j in self.signifiers:
-                        if self.arr[i-1] in self.ordinal:
-                            self.arr[i-2:i+1] = [" ".join(self.arr[i-2:i+1])]
-                        elif j in ("journey", "walk") and \
-                        self.arr[i-2] in ("day", "days"):
-                            if self.arr[i-3] in ("Sabbath", "sabbath"):
-                                self.arr[i-2:i+1] = ["sabbath day's journey"]
-                            else:
-                                self.arr[i-1:i+1] = ["day's journey"]
-                        elif j in ("cubit", "cubits"):
-                            if self.arr[i-1] == 'long':
-                                self.arr[i-1:i+1] = [" ".join(arr[i-1:i+1])]
+        returns:
+            arr (arr): array of words with multiword tokens joined
+        """
+        if self.has_multiword == True:
+            for i, j in enumerate(self.arr):
+                if j in self.signifiers:
+                    if self.arr[i-1] in self.ordinal:
+                        self.arr[i-2:i+1] = [" ".join(self.arr[i-2:i+1])]
+                    elif j in ("journey", "walk") and \
+                    self.arr[i-2] in ("day", "days"):
+                        if self.arr[i-3] in ("Sabbath", "sabbath"):
+                            self.arr[i-2:i+1] = ["sabbath day's journey"]
+                        else:
+                            self.arr[i-1:i+1] = ["day's journey"]
+                    elif j in ("cubit", "cubits"):
+                        if self.arr[i-1] == 'long':
+                            self.arr[i-1:i+1] = [" ".join(arr[i-1:i+1])]
         return self.arr
 
-    def Has_Measure_Words(self):
-        """Method checking whether a valid measurement can be found in the input.
+class Has_Measure_Words(object):
+    """Method checking whether a valid measurement can be found in the input.
 
-        Args:
-            None
+    attributes:
+        __init__
+        run
 
-        Returns:
-            None
+    """
+
+    def __init__(self, arr):
+        """Method initializing Has_Measure_Words
+
+        args:
+            arr (arr)
+
+        attributes:
+            arr (arr): array to be checked for relevant measure words
+            measurement_found (bool): signifier if measure word found,
+                initialized to False
+            mwords (dict): dictionary of measure words in various forms
         """
-        arr = self.tokenized_string
-        if any(s in arr for s in measurement_roots.keys()): # concatenate keys and values into one list
+        self.arr = arr
+        self.measurement_found = False
+        self.mwords = set(Reference_Lists.measurement_roots.keys(),
+                          Reference_Lists.measurement_roots.values())
+
+    def run(self):
+        """Method checking for presence of measurments in Ancient Hebrew units
+
+        returns:
+            arr (arr): returns array if Ancient Hebrew measure words found
+                in arr
+        """
+        if any(self.mwords.intersection(self.arr)):
             self.measurement_found = True
-        elif any(s in arr for s in measurement_roots.values()): # change to assertion
-            self.measurement_found = True
+            return self.arr
         else:
-            print("Measurement to be converted not found in input text:\n{}".format(self.string))
-        self.tokenized_string = arr
+            print("Measurement to be converted not found in input text:\n{}".format(self.arr))
+            break
 
     def Lemmatize_Measure_Words(self):
         """Method lemmatizing measure words in input.
