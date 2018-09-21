@@ -1,7 +1,5 @@
 class Verse:
 
-    def __init__(self, string):
+    def __init__(self, string, units = "imperial"):
         self.string = string
-
-    def Return_String(self):
-        return self.string 
+        self.units = units
