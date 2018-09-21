@@ -1,7 +1,7 @@
 from reference_lists import Reference_Lists
 from algs import *
 
-class Discombibleator:
+class Discombibleator(object):
 
     """Class taking an object and converting it into an output string with
     measurements converted into imperial or metric units.
@@ -39,14 +39,15 @@ class Discombibleator:
         self.lemmatized = False
         self.nums_converted = False
         self.mw_converted = False
+        self.output = None
 
     def __run__(self):
         "Method running algorithms on "
-        self.Tokenize()
-        self.Concat_Multiword()
-        self.Has_Multiword()
-        self.Lemmatize_Measure_Words()
-        self.Find_Convert_Numbers()
-        self.Convert_Measure_Words()
-        self.Join_Elements()
+        tokenized = Tokenize(self.input)
+        tokenized.Concat_Multiword()
+        tokenized.Has_Multiword()
+        tokenized.Lemmatize_Measure_Words()
+        tokenized.Find_Convert_Numbers()
+        tokenized.Convert_Measure_Words()
+        tokenized.Join_Elements()
         return self.output
