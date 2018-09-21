@@ -14,19 +14,19 @@ class Concat_Multiword(object):
 
     """Method finding and concatenating tokenized multi-word measure words.
 
-    Attributes:
+    attributes:
         __init__
-        run(arr)
+        __run__
 
     """
 
     def __init__(self, arr):
         """Method initializing Concat_Multiword
 
-        Args:
+        args:
             arr (arr)
 
-        Attributes:
+        attributes:
             arr (arr): array of word-tokenized words and symbols
             has_multiword (bool): checks for presence of potential
                 multiword-measure words through list of multiword_signifiers
@@ -38,7 +38,7 @@ class Concat_Multiword(object):
         self.signifiers = set(arr).intersection(multiwords)
         self.ordinal = ordinal
 
-    def run(self):
+    def __run__(self):
         """Method to concatenate multi-word measure words into one Array
         item
 
@@ -62,11 +62,12 @@ class Concat_Multiword(object):
         return self.arr
 
 class Has_Measure_Words(object):
+
     """Method checking whether a valid measurement can be found in the input.
 
     attributes:
         __init__
-        run
+        __run__
 
     """
 
@@ -105,7 +106,7 @@ class Lemmatize_Measure_Words(object):
 
         attributes:
             __init__
-            run
+            __run__
         """
     def __init__(self, arr):
         self.arr = arr
@@ -123,22 +124,40 @@ class Find_Convert_Numbers(object):
         attributes:
             __init__
             Represents_Int
+            Number_Multiplier
             Number_Converter
-
+            Range_Sensitizer
+            Measure_Word_Converter
+            Match_Num_MW
+            __run__
         """
 
-    def __init__(self, arr):
+    def __init__(self, arr, units = "imperial"):
+        """Method initializing Find_Convert_Numbers
+
+        args:
+            arr (arr)
+
+        attributes:
+            arr (arr): array to be processed
+            units (str): string indication whether measurement are to be given
+                in metric or imperial units. Default in imperial
+            num_mw_match & mw_num_match (arr): array of Ancient Hebrew measure
+                words Number_Converter and Measure_Word_Converter use, for
+                comparison
+        """
         self.arr = arr
+        self.units = units
         self.num_mw_match = []
         self.mw_num_match = []
 
     def Represents_Int(self, s):
         """Method checking whether an input is a string representation of an integer.
 
-        Args:
+        args:
             s (string): string item to be checked
 
-        Returns:
+        returns:
             (bool): whether the input is a string representation of an integer
         """
         try:
@@ -151,11 +170,11 @@ class Find_Convert_Numbers(object):
         """Method converting number from units in Ancient Hebrew measurements to
         units in modern measurements.
 
-        Args:
+        args:
             n (int): number to be converted
             measure_word (str): Ancient Hebrew units in which n was measured
 
-        Returns:
+        returns:
             (str): string of the float of n converted into Imperial or Metric
                 units
         """
@@ -167,6 +186,15 @@ class Find_Convert_Numbers(object):
         return str(n)
 
     def Number_Converter(unit, arr):
+        """Method handling both integers and the words "the" and "an" before
+        measure words, converting them to imperial or metric units
+
+        args:
+            arr (arr): array to be examined for ints or variations on "a" and
+                "the"
+        returns:
+            arr (arr): array with numbers replaced with converted numbers
+        """
         unit_locator = arr.index(unit)
         if self.Represents_Int(unit):
             arr[unit_locator] = self.Number_Multiplier(unit, j)
@@ -175,23 +203,29 @@ class Find_Convert_Numbers(object):
                 arr[unit_locator] = self.Number_Multiplier(1, j)
         return arr
 
-    def Range_Sensitizer(self, arr):
-        for i, j in enumerate(arr):
+    def Range_Sensitizer(self):
+        """Method catching numbers separated from measure words by adjectives
+        or other filler words
+
+        args:
+            arr (arr): array to be processed
+
+        returns:
+            arr (arr): array with original numbers converted to modern units
+        """
+        for i, j in enumerate(self.arr):
             if j in measurement_roots.values():
                 if i <= 4:
                     for unit in arr[:i]:
-                        arr = Number_Converter(unit, arr)
+                        self.arr = Number_Converter(unit, self.arr)
                 else:
                     for unit in arr[i-4:i]:
-                        arr = Number_Converter(unit, arr)
-        return arr
+                        self.arr = Number_Converter(unit, self.arr)
+        return self.arr
 
 
     def Measure_Word_Converter(self):
         """Method converting measure words into Imperial or Metric measures.
-
-        Args:
-            word(str): Ancient Hebrew measure word to be converted
 
         Returns:
             (str): string of corresponding metric or imperial measure
@@ -203,6 +237,9 @@ class Find_Convert_Numbers(object):
         return self.arr
 
     def Match_Num_MW(self):
+        """Method checking that measure words used to convert numbers correspond
+        to measure words converted to modern versions
+        """
         try:
             self.num_mw_match == self.mw_num_match
         except AssertionError:
@@ -211,7 +248,13 @@ class Find_Convert_Numbers(object):
                     self.mw_num_match))
             break
 
-    def run(self):
+    def __run__(self):
+        """Method running consecutive methods within Find_Convert_Numbers class
+
+        returns:
+            arr (arr): array with measurement elements converted into modern
+                units
+        """
         nums_converted = self.Range_Sensitizer(self.arr)
         mws_converted = self.Measure_Word_Converter(nums_converted)
         self.Match_Num_MW(mws_converted)
@@ -238,6 +281,12 @@ class Join_Elements:
         self.output = None
 
     def run(self):
+        """Method running Join_Elements class
+
+        returns:
+            output (str): string of input verse with Ancient Hebrew measurements
+            converted into modern measurements.
+        """
         for element in self.arr:
             self.output = "".join([" "+i if not i.startswith("'") and \
             i not in self.punctuation else i for i in arr]).strip()
