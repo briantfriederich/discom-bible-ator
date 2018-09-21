@@ -20,11 +20,11 @@ class Concat_Multiword(object):
 
     """
 
-    def __init__(self, arr):
+    def __init__(self, object):
         """Method initializing Concat_Multiword
 
         args:
-            arr (arr)
+            object (obj)
 
         attributes:
             arr (arr): array of word-tokenized words and symbols
@@ -33,7 +33,7 @@ class Concat_Multiword(object):
             signifiers (arr): list of multiword_signifiers present in arr
             ordinal (arr): list of ordinal_times signifiers to check
         """
-        self.arr = arr
+        self.arr = object.string
         self.has_multiword = any(np.intersect1d(arr, multiwords))
         self.signifiers = set(arr).intersection(multiwords)
         self.ordinal = ordinal
@@ -71,7 +71,7 @@ class Has_Measure_Words(object):
 
     """
 
-    def __init__(self, arr):
+    def __init__(self, object):
         """Method initializing Has_Measure_Words
 
         args:
@@ -83,7 +83,7 @@ class Has_Measure_Words(object):
                 initialized to False
             mwords (dict): dictionary of measure words in various forms
         """
-        self.arr = arr
+        self.arr = object.string
         self.measurement_found = False
         self.mwords = set(measurement_roots.keys(), measurement_roots.values())
 
@@ -108,8 +108,8 @@ class Lemmatize_Measure_Words(object):
             __init__
             __run__
         """
-    def __init__(self, arr):
-        self.arr = arr
+    def __init__(self, object):
+        self.arr = object.string
         self.mroots = measurement_roots.values()
 
     def run(self):
@@ -132,7 +132,7 @@ class Find_Convert_Numbers(object):
             __run__
         """
 
-    def __init__(self, arr, units = "imperial"):
+    def __init__(self, object):
         """Method initializing Find_Convert_Numbers
 
         args:
@@ -146,8 +146,8 @@ class Find_Convert_Numbers(object):
                 words Number_Converter and Measure_Word_Converter use, for
                 comparison
         """
-        self.arr = arr
-        self.units = units
+        self.arr = object.string
+        self.units = object.units
         self.num_mw_match = []
         self.mw_num_match = []
 
@@ -262,7 +262,7 @@ class Find_Convert_Numbers(object):
         return self.arr
 
 
-class Join_Elements:
+class Join_Elements(object):
 
         """Class detokenizing array of words into final sentence.
 
@@ -271,13 +271,13 @@ class Join_Elements:
 
         """
 
-    def __init__(self, arr):
+    def __init__(self, object):
         """Method initializing Join_Elements class
 
         args:
             arr (arr): array to be joined into continuous string
         """
-        self.arr = arr
+        self.arr = object.string
         self.output = None
 
     def run(self):
