@@ -100,21 +100,21 @@ class Has_Measure_Words(object):
             print("Measurement to be converted not found in input text:\n{}".format(self.arr))
             break
 
-    def Lemmatize_Measure_Words(self):
+class Lemmatize_Measure_Words(object):
         """Method lemmatizing measure words in input.
 
-        Args:
-            None
-
-        Returns:
-            None
+        attributes:
+            __init__
+            run
         """
-        arr = self.tokenized_string
-        if self.measurement_found: #change to assertion
-            for word in set(arr).intersection(measurement_roots.keys()):
-                arr[:] = [measurement_roots[word] if x == word else x for x in arr]
-            self.lemmatized = True
-        self.tokenized_string = arr
+    def __init__(self, arr):
+        self.arr = arr
+        self.mroots = Reference_Lists.measurement_roots.values()
+
+    def run(self):
+        for word in set(arr).intersection(self.mroots):
+            self.arr[:] = [self.mroots[word] if x == word else x for x in arr]
+        return self.arr
 
     def Represents_Int(self, s):
         """Method checking whether an input is a string representation of an integer.
