@@ -116,6 +116,22 @@ class Lemmatize_Measure_Words(object):
             self.arr[:] = [self.mroots[word] if x == word else x for x in arr]
         return self.arr
 
+class Find_Convert_Numbers(object):
+
+        """Class locating and converting relevant numbers.
+
+        attributes:
+            __init__
+            Represents_Int
+            Number_Converter
+
+        """
+
+    def __init__(self, arr):
+        self.arr = arr
+        self.num_mw_match = []
+        self.mw_num_match = []
+
     def Represents_Int(self, s):
         """Method checking whether an input is a string representation of an integer.
 
@@ -131,7 +147,7 @@ class Lemmatize_Measure_Words(object):
         except ValueError:
             return False
 
-    def Number_Converter(self, n, measure_word):
+    def Number_Multiplier(self, n, measure_word):
         """Method converting number from units in Ancient Hebrew measurements to
         units in modern measurements.
 
@@ -140,15 +156,38 @@ class Lemmatize_Measure_Words(object):
             measure_word (str): Ancient Hebrew units in which n was measured
 
         Returns:
-            (str): string of the float of n converted into Imperial or Metric units
+            (str): string of the float of n converted into Imperial or Metric
+                units
         """
         if self.units == "metric":
             n = float(n) * float(measures['metric_multiplier'][measure_word])
         else:
             n = float(n) * float(measures['imperial_multiplier'][measure_word])
+        self.num_mw_match.append(measure_word)
         return str(n)
 
-    def Measure_Word_Converter(self, word):
+    def Number_Converter(unit, arr):
+        unit_locator = arr.index(unit)
+        if self.Represents_Int(unit):
+            arr[unit_locator] = self.Number_Multiplier(unit, j)
+        elif unit in ("a", "an", "the", "A", "An", "The"):
+            if(arr.index(j) - unit_locator) in range(2):
+                arr[unit_locator] = self.Number_Multiplier(1, j)
+        return arr
+
+    def Range_Sensitizer(self, arr):
+        for i, j in enumerate(arr):
+            if j in Reference_Lists.measurement_roots.values():
+                if i <= 4:
+                    for unit in arr[:i]:
+                        arr = Number_Converter(unit, arr)
+                else:
+                    for unit in arr[i-4:i]:
+                        arr = Number_Converter(unit, arr)
+        return arr
+
+
+    def Measure_Word_Converter(self):
         """Method converting measure words into Imperial or Metric measures.
 
         Args:
@@ -157,60 +196,49 @@ class Lemmatize_Measure_Words(object):
         Returns:
             (str): string of corresponding metric or imperial measure
         """
-        return (measures[self.units][word])
+        for i, j in enumerate(self.arr):
+            if j in Reference_Lists.measurement_roots.values():
+                mw_num_match.append(j)
+                self.arr[i] = Reference_Lists.measures[self.units][j]
+        return self.arr
 
-    def Find_Convert_Numbers(self):
-        """Method locating and converting relevant numbers.
+    def Match_Num_MW(self):
+        try:
+            self.num_mw_match == self.mw_num_match
+        except AssertionError:
+            print("Measure words and corresponding numbers", \
+                    "don't match:\n{}".format(self.num_mw_match,
+                    self.mw_num_match))
+            break
 
-        Args:
-            None
+    def run(self):
+        nums_converted = self.Range_Sensitizer(self.arr)
+        mws_converted = self.Measure_Word_Converter(nums_converted)
+        self.Match_Num_MW(mws_converted)
+        self.arr = mws_converted
+        return self.arr
 
-        Returns:
-            None
+
+class Join_Elements:
+
+        """Class detokenizing array of words into final sentence.
+
+        attributes:
+            __init__
+
         """
-        arr = self.tokenized_string
-        if self.lemmatized: # turn into assertion
-            for i, j in enumerate(arr):
-                if j in measurement_roots.values():
-                    for unit in arr[:i]: # I don't like that this might look so extensively back.
-                        if (i - arr.index(unit)) <= 4:
-                            unit_locator = arr.index(unit)
-                            if self.Represents_Int(unit):
-                                arr[unit_locator] = self.Number_Converter(unit, j)
-                            elif unit in ("a", "an", "the", "A", "An", "The"):
-                                if(arr.index(j) - unit_locator) in range(2):
-                                    arr[unit_locator] = self.Number_Converter(1, j)
-            self.nums_converted = True
-        self.tokenized_string = arr
 
-    def Convert_Measure_Words(self):
-        """Method locating and converting relevant numbers.
+    def __init__(self, arr):
+        """Method initializing Join_Elements class
 
-        Args:
-            None
+        args:
+            arr (arr): array to be joined into continuous string
+        """        
+        self.arr = arr
+        self.output = None
 
-        Returns:
-            None
-        """
-        arr = self.tokenized_string
-        if self.nums_converted: # turn into assertion
-            for i, j in enumerate(arr):
-                if j in measurement_roots.values():
-                    arr[i] = self.Measure_Word_Converter(j)
-        self.mw_converted = True
-        self.tokenized_string = arr
-
-    def Join_Elements(self):
-        """Method detokenizing array of words into final sentence.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        arr = self.tokenized_string
-        for element in arr:
-            output = "".join([" "+i if not i.startswith("'") and i not in self.punctuation else i for i in arr]).strip()
-        self.tokenized_string = arr
-        return output
+    def run(self):
+        for element in self.arr:
+            self.output = "".join([" "+i if not i.startswith("'") and \
+            i not in self.punctuation else i for i in arr]).strip()
+        return self.output
