@@ -8,7 +8,7 @@ class Discombibleator(object):
 
     """
 
-    def __init__(self, input, units = 'imperial'):
+    def __init__(self, object):
         """Method initializing Discombibleator tool.
         Method initializing Biblical_Measurement object.
 
@@ -32,22 +32,15 @@ class Discombibleator(object):
             ordinal_times (arr): Array of words indicating a specific time.
             punctuation (arr): List if punctuation to ease detokenizing sentences.
         """
-        self.string = input
-        self.units = units
-        self.arr = []
-        self.measurement_found = False
-        self.lemmatized = False
-        self.nums_converted = False
-        self.mw_converted = False
-        self.output = None
+        self.string = object.string
+        self.units = object.units
+
 
     def __run__(self):
         "Method running algorithms on "
         tokenized = Tokenize(self.input)
-        tokenized.Concat_Multiword()
-        tokenized.Has_Multiword()
-        tokenized.Lemmatize_Measure_Words()
-        tokenized.Find_Convert_Numbers()
-        tokenized.Convert_Measure_Words()
-        tokenized.Join_Elements()
-        return self.output
+        Concat_Multiword.run()
+        Has_Multiword.run()
+        Lemmatize_Measure_Words.run()
+        Find_Convert_Numbers.run()
+        Join_Elements.run()
