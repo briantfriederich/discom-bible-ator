@@ -7,29 +7,62 @@ measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0, squeeze=T
 
 measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0, index_col=1, squeeze=True).to_dict()
 
-def Concat_Multiword(self):
+class Concat_Multiword(object):
+
         """Method finding and concatenating tokenized multi-word measure words.
 
         Args:
-            None
+            arr (arr):
 
-        Returns:
-            None
+        Attributes:
+            __init__
+            run(arr)
+
         """
-        if any(np.intersect1d(self.arr, self.multiword_signifiers)):
-            for i, j in enumerate(self.arr):
-                if j in self.multiword_signifiers:
-                    if self.arr[i-1] in self.ordinal_times:
-                        self.arr[i-2:i+1] = [" ".join(self.arr[i-2:i+1])]
-                    elif j in ("journey", "walk"):
-                        if self.arr[i-2] in ("Sabbath", "sabbath"):
-                            self.arr[i-2:i+1] = ["sabbath day's journey"]
-                        else:
-                            self.arr[i-1:i+1] = ["day's journey"]
-                    elif j in ("cubit", "cubits"):
-                        if self.arr[i-1] == 'long':
-                            self.arr[i-1:i+1] = [" ".join(arr[i-1:i+1])]
-        self.tokenized_string = self.arr
+
+        def __init__(self, arr):
+            """Method initializing Concat_Multiword
+
+            Args:
+                arr (arr)
+
+            Attributes:
+                arr (arr): array of word-tokenized words and symbols
+                has_multiword (bool): checks for presence of potential
+                    multiword-measure words through list of multiword_signifiers
+                signifiers (arr): list of multiword_signifiers present in arr
+                ordinal (arr): list of ordinal_times signifiers to check
+            """
+            self.arr = arr
+            self.has_multiword = any(np.intersect1d(arr, Reference_Lists.multiword_signifiers))
+            self.signifiers = set(arr).intersection(Reference_Lists.multiword_signifiers)
+            self.ordinal = Reference_Lists.ordinal_times
+
+        def run(self, arr):
+            """Method to concatenate multi-word measure words into one Array
+            itemself.
+
+            args:
+                arr (arr): array of tokenized words
+
+            returns:
+                arr (arr): array of words with multiword tokens joined
+            """
+            if self.has_multiword == True:
+                for i, j in enumerate(self.arr):
+                    if j in self.signifiers:
+                        if self.arr[i-1] in self.ordinal:
+                            self.arr[i-2:i+1] = [" ".join(self.arr[i-2:i+1])]
+                        elif j in ("journey", "walk") and \
+                        self.arr[i-2] in ("day", "days"):
+                            if self.arr[i-3] in ("Sabbath", "sabbath"):
+                                self.arr[i-2:i+1] = ["sabbath day's journey"]
+                            else:
+                                self.arr[i-1:i+1] = ["day's journey"]
+                        elif j in ("cubit", "cubits"):
+                            if self.arr[i-1] == 'long':
+                                self.arr[i-1:i+1] = [" ".join(arr[i-1:i+1])]
+        return self.arr
 
     def Has_Measure_Words(self):
         """Method checking whether a valid measurement can be found in the input.
