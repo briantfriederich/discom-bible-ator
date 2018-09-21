@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 from nltk.tokenize import word_tokenize
-from reference_lists import Reference_Lists
+from reference_lists.Reference_Lists import multiword_signifiers as multiwords
+from reference_lists.Reference_Lists import ordinal_times as ordinal
 
 measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
                         squeeze=True).to_dict()
@@ -33,9 +34,9 @@ class Concat_Multiword(object):
             ordinal (arr): list of ordinal_times signifiers to check
         """
         self.arr = arr
-        self.has_multiword = any(np.intersect1d(arr, Reference_Lists.multiword_signifiers))
-        self.signifiers = set(arr).intersection(Reference_Lists.multiword_signifiers)
-        self.ordinal = Reference_Lists.ordinal_times
+        self.has_multiword = any(np.intersect1d(arr, multiwords))
+        self.signifiers = set(arr).intersection(multiwords)
+        self.ordinal = ordinal
 
     def run(self):
         """Method to concatenate multi-word measure words into one Array
@@ -83,8 +84,7 @@ class Has_Measure_Words(object):
         """
         self.arr = arr
         self.measurement_found = False
-        self.mwords = set(Reference_Lists.measurement_roots.keys(),
-                          Reference_Lists.measurement_roots.values())
+        self.mwords = set(measurement_roots.keys(), measurement_roots.values())
 
     def run(self):
         """Method checking for presence of measurments in Ancient Hebrew units
@@ -109,7 +109,7 @@ class Lemmatize_Measure_Words(object):
         """
     def __init__(self, arr):
         self.arr = arr
-        self.mroots = Reference_Lists.measurement_roots.values()
+        self.mroots = measurement_roots.values()
 
     def run(self):
         for word in set(arr).intersection(self.mroots):
@@ -177,7 +177,7 @@ class Find_Convert_Numbers(object):
 
     def Range_Sensitizer(self, arr):
         for i, j in enumerate(arr):
-            if j in Reference_Lists.measurement_roots.values():
+            if j in measurement_roots.values():
                 if i <= 4:
                     for unit in arr[:i]:
                         arr = Number_Converter(unit, arr)
@@ -197,9 +197,9 @@ class Find_Convert_Numbers(object):
             (str): string of corresponding metric or imperial measure
         """
         for i, j in enumerate(self.arr):
-            if j in Reference_Lists.measurement_roots.values():
+            if j in measurement_roots.values():
                 mw_num_match.append(j)
-                self.arr[i] = Reference_Lists.measures[self.units][j]
+                self.arr[i] = measures[self.units][j]
         return self.arr
 
     def Match_Num_MW(self):
@@ -233,7 +233,7 @@ class Join_Elements:
 
         args:
             arr (arr): array to be joined into continuous string
-        """        
+        """
         self.arr = arr
         self.output = None
 
