@@ -84,6 +84,32 @@ class Test_Concat_Multiword(unittest.TestCase):
         self.assertEqual(output3, ["No", "multiword", "signifiers", "here",
             "!"], "did not concatenate correctly")
 
+class Test_Has_Measure_Words(unittest.TestCase):
+    def setUp(self):
+        self.test_arr1 = ["Now", "is", "the eleventh hour", "."]
+        self.test_arr2 = ["Give", "me", "2", "denarae", "of", "bread"]
+        self.test_arr3 = ["No", "measurements", "here"]
+
+    def test_initialization(self):
+        self.assertEqual(Has_Measure_Words(self.test_arr1).arr, self.test_arr1,
+            "array not initialized properly")
+        self.assertEqual(Has_Measure_Words(self.test_arr2).measurement_found,
+            False, "measurment_found not initialized properly")
+        self.assertEqual(len(Has_Measure_Words(self.test_arr3).mwords),
+            88, "measure words not loaded properly into class")
+
+    def test_run_method(self):
+        output1 = Has_Measure_Words(self.test_arr1).__run__()
+        Has_Measure_Words(self.test_arr2).__run__()
+        output3 = Has_Measure_Words(self.test_arr3).__run__()
+        Has_Measure_Words(self.test_arr3).__run__()
+        self.assertEqual(output1, self.test_arr1, "array not returned")
+        self.assertEqual(output3, None, "Did not throw expected error")
+        self.assertEqual((Has_Measure_Words(self.test_arr2).measurement_found, True,
+            "Did not find measurement")
+        #self.assertEqual((Has_Measure_Words(self.test_arr3).measurement_found, False,
+            #"Did not execute method correctly")
+
 if __name__ == '__main__':
     unittest.main()
 

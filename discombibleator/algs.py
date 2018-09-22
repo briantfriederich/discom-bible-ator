@@ -100,18 +100,18 @@ class Has_Measure_Words(object):
                 initialized to False
             mwords (dict): dictionary of measure words in various forms
         """
-        self.arr = object.string
+        self.arr = object
         self.measurement_found = False
-        self.mwords = set(measurement_roots.keys(), measurement_roots.values())
+        self.mwords = (list(measurement_roots.keys()) + list(measurement_roots.values()))
 
-    def run(self):
+    def __run__(self):
         """Method checking for presence of measurments in Ancient Hebrew units
 
         returns:
             arr (arr): returns array if Ancient Hebrew measure words found
                 in arr
         """
-        if any(self.mwords.intersection(self.arr)):
+        if any(set(self.mwords).intersection(self.arr)):
             self.measurement_found = True
             return self.arr
         else:
