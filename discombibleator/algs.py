@@ -101,7 +101,6 @@ class Has_Measure_Words(object):
             mwords (dict): dictionary of measure words in various forms
         """
         self.arr = object
-        self.measurement_found = False
         self.mwords = (list(measurement_roots.keys()) + list(measurement_roots.values()))
 
     def __run__(self):
@@ -112,10 +111,9 @@ class Has_Measure_Words(object):
                 in arr
         """
         if any(set(self.mwords).intersection(self.arr)):
-            self.measurement_found = True
             return self.arr
         else:
-            print("Measurement to be converted not found in input text:\n{}".format(self.arr))
+            raise ValueError("Measurement to be converted not found in input text:\n{}".format(self.arr))
             # no longer breaking: check if we have problems with invalid sentences
 
 class Lemmatize_Measure_Words(object):
