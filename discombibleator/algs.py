@@ -50,9 +50,9 @@ class Concat_Multiword(object):
             signifiers (arr): list of multiword_signifiers present in arr
             ordinal (arr): list of ordinal_times signifiers to check
         """
-        self.arr = object.string
-        self.has_multiword = any(np.intersect1d(arr, ref_lists().multiword_signifiers))
-        self.signifiers = set(arr).intersection(ref_lists().multiword_signifiers)
+        self.arr = object
+        self.has_multiword = any(np.intersect1d(self.arr, ref_lists().multiword_signifiers))
+        self.signifiers = set(self.arr).intersection(ref_lists().multiword_signifiers)
         self.ordinal = ref_lists().ordinal_times
 
     def __run__(self):
@@ -75,7 +75,7 @@ class Concat_Multiword(object):
                             self.arr[i-1:i+1] = ["day's journey"]
                     elif j in ("cubit", "cubits"):
                         if self.arr[i-1] == 'long':
-                            self.arr[i-1:i+1] = [" ".join(arr[i-1:i+1])]
+                            self.arr[i-1:i+1] = [" ".join(self.arr[i-1:i+1])]
         return self.arr
 
 class Has_Measure_Words(object):
