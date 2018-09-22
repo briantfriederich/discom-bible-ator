@@ -1,9 +1,9 @@
 import unittest
 
-from inputs import *
-from reference_lists import *
-from algs import *
-from main import *
+from discombibleator.inputs import *
+from discombibleator.reference_lists import  Reference_Lists as ref_list
+from discombibleator.algs import *
+#from discombibleator.main import *
 
 class Test_Inputs(unittest.TestCase):
     def setUp(self):
@@ -13,6 +13,24 @@ class Test_Inputs(unittest.TestCase):
     def test_initialization(self):
         self.assertEqual(self.verse.string, "2 drachmae", "incorrect string")
         self.assertEqual(self.units.units, "imperial", "incorrect units")
+
+class Test_Reference_Lists(unittest.TestCase):
+    def setUp(self):
+        self.multiword_signifiers = ref_list().multiword_signifiers
+        self.ordinal_times = ref_list().ordinal_times
+        self.punctuation = ref_list().punctuation
+
+    def test_initialization(self):
+        self.assertEqual(self.multiword_signifiers, ["hour", "watch", "journey",
+            "walk", "cubit", "cubits"], "incorrect multiword signifiers list")
+        self.assertEqual(self.ordinal_times, ["second", "third", "fourth",
+            "sixth", "seventh", "ninth", "tenth", "eleventh"],
+            "incorrect ordinal times list")
+        self.assertEqual(self.punctuation, [".", ";", ",", "!", "?", "(", ")",
+            ":"], "incorrect punctuation list")
+
+if __name__ == '__main__':
+    unittest.main()
 
 """
 y = Verse("2 drachmae")

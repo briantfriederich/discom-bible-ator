@@ -1,14 +1,31 @@
 import numpy as np
 import pandas as pd
 from nltk.tokenize import word_tokenize
-from reference_lists.Reference_Lists import multiword_signifiers as multiwords
-from reference_lists.Reference_Lists import ordinal_times as ordinal
+from .reference_lists import Reference_Lists as ref_lists
 
 measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
                         squeeze=True).to_dict()
 
 measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0,
                                 index_col=1, squeeze=True).to_dict()
+
+class Tokenize(object):
+
+    """Class tokenizing object with nltk
+
+    attributes:
+        __init__
+        run
+
+    """
+
+    def __init__(self, object):
+        self.string = object
+        self.arr = None
+
+    def __run__(self):
+        self.arr = word_tokenize(self.string)
+        return self.arr
 
 class Concat_Multiword(object):
 
@@ -34,9 +51,9 @@ class Concat_Multiword(object):
             ordinal (arr): list of ordinal_times signifiers to check
         """
         self.arr = object.string
-        self.has_multiword = any(np.intersect1d(arr, multiwords))
-        self.signifiers = set(arr).intersection(multiwords)
-        self.ordinal = ordinal
+        self.has_multiword = any(np.intersect1d(arr, ref_lists().multiword_signifiers))
+        self.signifiers = set(arr).intersection(ref_lists().multiword_signifiers)
+        self.ordinal = ref_lists().ordinal_times
 
     def __run__(self):
         """Method to concatenate multi-word measure words into one Array
@@ -99,15 +116,18 @@ class Has_Measure_Words(object):
             return self.arr
         else:
             print("Measurement to be converted not found in input text:\n{}".format(self.arr))
-            break
+            # no longer breaking: check if we have problems with invalid sentences
 
 class Lemmatize_Measure_Words(object):
-        """Method lemmatizing measure words in input.
 
-        attributes:
-            __init__
-            __run__
-        """
+    """Method lemmatizing measure words in input.
+
+    attributes:
+        __init__
+        __run__
+
+    """
+
     def __init__(self, object):
         self.arr = object.string
         self.mroots = measurement_roots.values()
@@ -119,20 +139,20 @@ class Lemmatize_Measure_Words(object):
 
 class Find_Convert_Numbers(object):
 
-        """Class locating and converting relevant numbers.
+    """Class locating and converting relevant numbers.
 
-        attributes:
-            __init__
-            Represents_Int
-            Number_Multiplier
-            Number_Converter
-            Range_Sensitizer
-            Measure_Word_Converter
-            Match_Num_MW
-            __run__
-        """
+    attributes:
+        __init__
+        Represents_Int
+        Number_Multiplier
+        Number_Converter
+        Range_Sensitizer
+        Measure_Word_Converter
+        Match_Num_MW
+        __run__
+    """
 
-    def __init__(self, object):
+    def __init__(self, object, units):
         """Method initializing Find_Convert_Numbers
 
         args:
@@ -147,7 +167,7 @@ class Find_Convert_Numbers(object):
                 comparison
         """
         self.arr = object.string
-        self.units = object.units
+        self.units = units.units
         self.num_mw_match = []
         self.mw_num_match = []
 
@@ -246,7 +266,7 @@ class Find_Convert_Numbers(object):
             print("Measure words and corresponding numbers", \
                     "don't match:\n{}".format(self.num_mw_match,
                     self.mw_num_match))
-            break
+                    #got rid of break here, circle back
 
     def __run__(self):
         """Method running consecutive methods within Find_Convert_Numbers class
@@ -264,12 +284,12 @@ class Find_Convert_Numbers(object):
 
 class Join_Elements(object):
 
-        """Class detokenizing array of words into final sentence.
+    """Class detokenizing array of words into final sentence.
 
-        attributes:
-            __init__
+    attributes:
+        __init__
 
-        """
+    """
 
     def __init__(self, object):
         """Method initializing Join_Elements class
@@ -289,5 +309,5 @@ class Join_Elements(object):
         """
         for element in self.arr:
             self.output = "".join([" "+i if not i.startswith("'") and \
-            i not in self.punctuation else i for i in arr]).strip()
+            i not in ef_lists().punctuation else i for i in arr]).strip()
         return self.output
