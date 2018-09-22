@@ -1,15 +1,15 @@
 from reference_lists import Reference_Lists
 from algs import *
-from verse import *
+from inputs import *
 
-class Discombibleator(Verse):
+class Discombibleator:
 
     """Class taking an object and converting it into an output string with
     measurements converted into imperial or metric units.
 
     """
 
-    def __init__(self, Verse):
+    def __init__(self, object, units):
         """Method initializing Discombibleator tool.
         Method initializing Biblical_Measurement object.
 
@@ -33,15 +33,14 @@ class Discombibleator(Verse):
             ordinal_times (arr): Array of words indicating a specific time.
             punctuation (arr): List if punctuation to ease detokenizing sentences.
         """
-        self.string = Verse.string
-        self.units = Verse.units
-
+        self.string = object.string
+        self.units = units.units
 
     def __run__(self):
         "Method running algorithms on "
-        tokenized = Tokenize(self.input)
-        Concat_Multiword.run()
-        Has_Multiword.run()
-        Lemmatize_Measure_Words.run()
-        Find_Convert_Numbers.run()
-        Join_Elements.run()
+        tokenized = Tokenize(self.string)
+        concatenated = Concat_Multiword.run(tokenized)
+        multi_handled = Has_Multiword.run(concatenated)
+        lemmatized = Lemmatize_Measure_Words.run(multi_handled)
+        converted = Find_Convert_Numbers.run(lemmatized, self.units)
+        Join_Elements.run(converted)

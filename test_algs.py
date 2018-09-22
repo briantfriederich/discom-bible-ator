@@ -1,3 +1,20 @@
+import unittest
+
+from inputs import *
+from reference_lists import *
+from algs import *
+from main import *
+
+class Test_Inputs(unittest.TestCase):
+    def setUp(self):
+        self.verse = Verse("2 drachmae")
+        self.units = Units()
+
+    def test_initialization(self):
+        self.assertEqual(self.verse.string, "2 drachmae", "incorrect string")
+        self.assertEqual(self.units.units, "imperial", "incorrect units")
+
+"""
 y = Verse("2 drachmae")
 y.Return_String()
 
@@ -37,3 +54,4 @@ x.lemmatize_measure_words()
 x.find_convert_numbers()
 x.convert_measure_words()
 x.join_elements()
+"""
