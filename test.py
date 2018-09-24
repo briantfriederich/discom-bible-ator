@@ -119,6 +119,47 @@ class Test_Lemmatize_Measure_Words(unittest.TestCase):
         self.assertEqual(output2,["10", "shekel", "and", "1", "shekel"],
             "did not lemmatize correctly")
 
+class Test_Find_Convert_Numbers(unittest.TestCase):
+    def setUp(self):
+        self.test_arr1 = ["12", "golden", "shekel"]
+        self.test_arr2 = ["twelve", "golden", "shekel"]
+        self.test_arr3 = ["I", "drank", "a", "bath", "of", "wine", "."]
+
+    def test_initialization(self):
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1).arr,
+            self.test_arr1, "array not initialized properly")
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1).units,
+         "imperial", "did not initialize units correctly")
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1, "metric").units,
+            "metric", "did not initialize units correctly")
+        self.assertEqual(Find_Convert_Numbers(self.test_arr2).num_mw_match, [],
+            "class did not initialize correctly")
+
+    def test_represents_int(self):
+        self.assertEqual(Find_Convert_Numbers.represents_int(self.test_arr1,
+        "12"), True, "Didn't recognize int")
+        self.assertEqual(Find_Convert_Numbers.represents_int(self.test_arr2,
+        "twelve"), False, "Didn't execute correctly")
+
+    def test_number_multiplier(self):
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1).number_multiplier(
+            "70", "cubit"), "105.0", "did not multiply correctly")
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1,
+            "metric").number_multiplier("70", "cubit"), "32.004",
+            "did not multiply correctly")
+        self.assertEqual(Find_Convert_Numbers(self.test_arr1).number_multiplier(
+            "0", "talent"), "0.0", "did not multiply correctly")
+
+    def test_number_converter(self):
+        self.assertEqual(Find_Convert_Numbers.number_converter("12",
+            self.test_arr1, "shekel"), ["10.0", "golden", "shekel"],
+                "did not multiply correctly")
+        self.assertEqual(Find_Convert_Numbers.number_converter("a",
+            self.test_arr3, "bath"), ["I", "drank", "2.0", "bath", "of", "wine",
+            "."],"did not multiply correctly")
+        self.assertEqual(Find_Convert_Numbers.number_converter("twelve",
+            self.test_arr2, "shekel"), self.test_arr2, "converted something unneeded")
+
 if __name__ == '__main__':
     unittest.main()
 

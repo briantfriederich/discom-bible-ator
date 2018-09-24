@@ -1,6 +1,6 @@
-from reference_lists import Reference_Lists
-from algs import *
-from inputs import *
+from .reference_lists import Reference_Lists
+from .algs import *
+from .inputs import *
 
 class Discombibleator:
 

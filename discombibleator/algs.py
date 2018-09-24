@@ -149,7 +149,7 @@ class Find_Convert_Numbers(object):
         __run__
     """
 
-    def __init__(self, object, units):
+    def __init__(self, object, units ="imperial"):
         """Method initializing Find_Convert_Numbers
 
         args:
@@ -163,12 +163,12 @@ class Find_Convert_Numbers(object):
                 words Number_Converter and Measure_Word_Converter use, for
                 comparison
         """
-        self.arr = object.string
-        self.units = units.units
+        self.arr = object
+        self.units = units
         self.num_mw_match = []
         self.mw_num_match = []
 
-    def Represents_Int(self, s):
+    def represents_int(self, s):
         """Method checking whether an input is a string representation of an integer.
 
         args:
@@ -183,7 +183,7 @@ class Find_Convert_Numbers(object):
         except ValueError:
             return False
 
-    def Number_Multiplier(self, n, measure_word):
+    def number_multiplier(self, n, measure_word):
         """Method converting number from units in Ancient Hebrew measurements to
         units in modern measurements.
 
@@ -202,7 +202,7 @@ class Find_Convert_Numbers(object):
         self.num_mw_match.append(measure_word)
         return str(n)
 
-    def Number_Converter(unit, arr):
+    def number_converter(item, arr, j):
         """Method handling both integers and the words "the" and "an" before
         measure words, converting them to imperial or metric units
 
@@ -212,15 +212,15 @@ class Find_Convert_Numbers(object):
         returns:
             arr (arr): array with numbers replaced with converted numbers
         """
-        unit_locator = arr.index(unit)
-        if self.Represents_Int(unit):
-            arr[unit_locator] = self.Number_Multiplier(unit, j)
+        item_locator = arr.index(item)
+        if self.represents_int(item):
+            arr[item_locator] = self.number_multiplier(item, j)
         elif unit in ("a", "an", "the", "A", "An", "The"):
             if(arr.index(j) - unit_locator) in range(2):
-                arr[unit_locator] = self.Number_Multiplier(1, j)
+                arr[unit_locator] = self.number_multiplier(1, j)
         return arr
 
-    def Range_Sensitizer(self):
+    def range_sensitizer(self):
         """Method catching numbers separated from measure words by adjectives
         or other filler words
 
@@ -234,14 +234,14 @@ class Find_Convert_Numbers(object):
             if j in measurement_roots.values():
                 if i <= 4:
                     for unit in arr[:i]:
-                        self.arr = Number_Converter(unit, self.arr)
+                        self.arr = number_converter(unit, self.arr, j)
                 else:
                     for unit in arr[i-4:i]:
-                        self.arr = Number_Converter(unit, self.arr)
+                        self.arr = number_converter(unit, self.arr, j)
         return self.arr
 
 
-    def Measure_Word_Converter(self):
+    def measure_word_converter(self):
         """Method converting measure words into Imperial or Metric measures.
 
         Returns:
@@ -253,7 +253,7 @@ class Find_Convert_Numbers(object):
                 self.arr[i] = measures[self.units][j]
         return self.arr
 
-    def Match_Num_MW(self):
+    def match_num_mw(self):
         """Method checking that measure words used to convert numbers correspond
         to measure words converted to modern versions
         """
@@ -272,9 +272,9 @@ class Find_Convert_Numbers(object):
             arr (arr): array with measurement elements converted into modern
                 units
         """
-        nums_converted = self.Range_Sensitizer(self.arr)
-        mws_converted = self.Measure_Word_Converter(nums_converted)
-        self.Match_Num_MW(mws_converted)
+        nums_converted = self.range_sensitizer(self.arr)
+        mws_converted = self.measure_word_converter(nums_converted)
+        self.match_num_mw(mws_converted)
         self.arr = mws_converted
         return self.arr
 
