@@ -110,7 +110,7 @@ class Has_Measure_Words(object):
             arr (arr): returns array if Ancient Hebrew measure words found
                 in arr
         """
-        if any(set(self.mwords).intersection(self.arr)):
+        if set(self.mwords) & set(self.arr):
             return self.arr
         else:
             raise ValueError("Measurement to be converted not found in input text:\n{}".format(self.arr))
@@ -127,12 +127,11 @@ class Lemmatize_Measure_Words(object):
     """
 
     def __init__(self, object):
-        self.arr = object.string
-        self.mroots = measurement_roots.values()
+        self.arr = object
 
-    def run(self):
-        for word in set(arr).intersection(self.mroots):
-            self.arr[:] = [self.mroots[word] if x == word else x for x in arr]
+    def __run__(self):
+        self.arr[:] = [measurement_roots[word] if word in measurement_roots else word for word in self.arr]
+        #self.arr[:] = [measurement_roots[word] if word in measurement_roots else word for word in self.arr]
         return self.arr
 
 class Find_Convert_Numbers(object):

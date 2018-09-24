@@ -87,19 +87,37 @@ class Test_Concat_Multiword(unittest.TestCase):
 class Test_Has_Measure_Words(unittest.TestCase):
     def setUp(self):
         self.test_arr1 = ["Now", "is", "the eleventh hour", "."]
-        self.test_arr3 = ["No", "measurements", "here"]
+        self.test_arr2 = ["No", "measurements", "here"]
 
     def test_initialization(self):
         self.assertEqual(Has_Measure_Words(self.test_arr1).arr, self.test_arr1,
             "array not initialized properly")
-        self.assertEqual(len(Has_Measure_Words(self.test_arr3).mwords),
+        self.assertEqual(len(Has_Measure_Words(self.test_arr2).mwords),
             88, "measure words not loaded properly into class")
 
     def test_run_method(self):
         output1 = Has_Measure_Words(self.test_arr1).__run__()
         self.assertEqual(output1, self.test_arr1, "array not returned")
-        self.assertRaises(ValueError, "Did not throw expected error")
+        with self.assertRaises(ValueError):
+            Has_Measure_Words(self.test_arr2).__run__()
 
+class Test_Lemmatize_Measure_Words(unittest.TestCase):
+    def setUp(self):
+        self.test_arr1 = ["5", "spans", "and", "10", "long cubits", "at", "5",
+            "day's journey", "away", "."]
+        self.test_arr2 = ["10", "shekels", "and", "1", "shekel"]
+
+    def test_initialization(self):
+        self.assertEqual(Lemmatize_Measure_Words(self.test_arr1).arr,
+            self.test_arr1, "array not initialized properly")
+
+    def test_run_method(self):
+        output1 = Lemmatize_Measure_Words(self.test_arr1).__run__()
+        output2 = Lemmatize_Measure_Words(self.test_arr2).__run__()
+        self.assertEqual(output1, ["5", "span", "and", "10", "long cubit", "at",
+         "5", "day's journey", "away", "."], "did not lemmatize correctly")
+        self.assertEqual(output2,["10", "shekel", "and", "1", "shekel"],
+            "did not lemmatize correctly")
 
 if __name__ == '__main__':
     unittest.main()
