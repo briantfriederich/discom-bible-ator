@@ -82,6 +82,7 @@ class Concat_Multiword(object):
                             self.arr[i-1:i+1] = ["long cubits"]
         return self.arr
 
+
 class Has_Measure_Words(object):
 
     """Method checking whether a valid measurement can be found in the input.
