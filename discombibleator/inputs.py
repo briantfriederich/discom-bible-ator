@@ -1,7 +1,4 @@
 class Verse:
-    def __init__(self, string):
+    def __init__(self, string, units = "imperial"):
         self.string = string
-
-class Units:
-    def __init__(self, units = "imperial"):
         self.units = units

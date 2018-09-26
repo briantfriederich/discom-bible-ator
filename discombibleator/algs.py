@@ -9,6 +9,10 @@ measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
 measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0,
                                 index_col=1, squeeze=True).to_dict()
 
+multiword_values = pd.read_csv('data/multiword_values.csv', header=0,
+                                index_col=1, squeeze=True).to_dict()
+
+
 class Tokenize(object):
 
     """Class tokenizing object with nltk
@@ -70,12 +74,12 @@ class Concat_Multiword(object):
                     elif j in ("journey", "walk") and \
                     self.arr[i-2] in ("day", "days"):
                         if self.arr[i-3] in ("Sabbath", "sabbath"):
-                            self.arr[i-2:i+1] = ["sabbath day's journey"]
+                            self.arr[i-2:i+1] = ["sabbath day's walk"]
                         else:
-                            self.arr[i-1:i+1] = ["day's journey"]
+                            self.arr[i-1:i+1] = ["days' journey"]
                     elif j in ("cubit", "cubits"):
                         if self.arr[i-1] == 'long':
-                            self.arr[i-1:i+1] = [" ".join(self.arr[i-1:i+1])]
+                            self.arr[i-1:i+1] = ["long cubits"]
         return self.arr
 
 class Has_Measure_Words(object):
@@ -228,7 +232,7 @@ class Find_Convert_Numbers(object):
         """
         for i, j in enumerate(self.arr):
             if j in measurement_roots.values():
-                if i <= 4:
+                if i <= 3:
                     for unit in self.arr[:i]:
                         self.arr = self.number_converter(unit, self.arr, j)
                         if self.represents_num(unit):
@@ -236,7 +240,7 @@ class Find_Convert_Numbers(object):
                         elif unit in ("a", "an", "the", "A", "An", "The"):
                             self.arr[i] = measures[self.units][j]
                 else:
-                    for unit in self.arr[i-4:i]:
+                    for unit in self.arr[i-3:i]:
                         self.arr = self.number_converter(unit, self.arr, j)
                         if self.represents_num(unit):
                             self.arr[i] = measures[self.units][j]
@@ -285,7 +289,7 @@ class Join_Elements(object):
         except ValueError:
             return False
 
-    def run(self):
+    def __run__(self):
         """Method running Join_Elements class
 
         returns:
@@ -294,10 +298,12 @@ class Join_Elements(object):
         """
         has_numbers = False
         for unit in self.arr:
-            self.output = "".join([" "+i if not i.startswith("'") and \
-            i not in ref_lists().punctuation else i for i in self.arr]).strip()
             if self.represents_float(unit):
                 has_numbers = True
+            elif unit in multiword_values:
+                has_numbers = True
+            self.output = "".join([" "+i if not i.startswith("'") and \
+            i not in ref_lists().punctuation else i for i in self.arr]).strip()
         if has_numbers == False:
-            raise ValueError("Numeric digits of numbers to be converted not found in input text:\n{}".format(self.arr))
+            raise ValueError("digits of numbers to be converted not found in input text:\n{}".format(self.arr))
         return self.output

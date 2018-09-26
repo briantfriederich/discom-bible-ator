@@ -1,15 +1,15 @@
-from .reference_lists import Reference_Lists
+from .reference_lists import Reference_Lists as ref_list
 from .algs import *
 from .inputs import *
 
-class Discombibleator:
+class Discombibleator(Verse):
 
     """Class taking an object and converting it into an output string with
     measurements converted into imperial or metric units.
 
     """
 
-    def __init__(self, object, units):
+    def __init__(self, object):
         """Method initializing Discombibleator tool.
         Method initializing Biblical_Measurement object.
 
@@ -34,13 +34,14 @@ class Discombibleator:
             punctuation (arr): List if punctuation to ease detokenizing sentences.
         """
         self.string = object.string
-        self.units = units.units
+        self.units = object.units
+        self.arr = None
 
     def __run__(self):
-        "Method running algorithms on "
-        tokenized = Tokenize(self.string)
-        concatenated = Concat_Multiword.run(tokenized)
-        multi_handled = Has_Multiword.run(concatenated)
-        lemmatized = Lemmatize_Measure_Words.run(multi_handled)
-        converted = Find_Convert_Numbers.run(lemmatized, self.units)
-        Join_Elements.run(converted)
+        """Method running algorithms from algs.py on inputs from inputs.py"""
+        self.arr = Tokenize(self.string).__run__()
+        self.arr = Concat_Multiword(self.arr).__run__()
+        self.arr = Has_Measure_Words(self.arr).__run__()
+        self.arr = Lemmatize_Measure_Words(self.arr).__run__()
+        self.arr = Find_Convert_Numbers(self.arr, self.units).__run__()
+        return Join_Elements(self.arr).__run__()

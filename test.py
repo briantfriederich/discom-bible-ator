@@ -3,16 +3,17 @@ import unittest
 from discombibleator.inputs import *
 from discombibleator.reference_lists import  Reference_Lists as ref_list
 from discombibleator.algs import *
-#from discombibleator.main import *
+from discombibleator.main import *
 
 class Test_Inputs(unittest.TestCase):
     def setUp(self):
-        self.verse = Verse("2 drachmae")
-        self.units = Units()
+        self.verse1 = Verse("2 drachmae")
+        self.verse2 = Verse("2 drachmae", "metric")
 
     def test_initialization(self):
-        self.assertEqual(self.verse.string, "2 drachmae", "incorrect string")
-        self.assertEqual(self.units.units, "imperial", "incorrect units")
+        self.assertEqual(self.verse1.string, "2 drachmae", "incorrect string")
+        self.assertEqual(self.verse1.units, "imperial", "incorrect units")
+        self.assertEqual(self.verse2.units, "metric", "incorrect units")
 
 class Test_Reference_Lists(unittest.TestCase):
     def setUp(self):
@@ -197,16 +198,57 @@ class Test_Join_Elements(unittest.TestCase):
             None, "output attribute not initialized properly")
 
     def test_run_method(self):
-        self.assertEqual(Join_Elements(self.test_arr1).run(),
+        self.assertEqual(Join_Elements(self.test_arr1).__run__(),
             "4.8 golden ounces", "run method did not execute properly")
         with self.assertRaises(ValueError):
-            Join_Elements(self.test_arr2).run()
-        self.assertEqual(Join_Elements(self.test_arr3).run(),
+            Join_Elements(self.test_arr2).__run__()
+        self.assertEqual(Join_Elements(self.test_arr3).__run__(),
             "I drank 5.9 gallons of wine and 295.0 gallons of water.",
             "run method did not execute properly")
-        self.assertEqual(Join_Elements(self.test_arr4).run(),
+        self.assertEqual(Join_Elements(self.test_arr4).__run__(),
             "12 years ago I took a nice long bath in a river.",
             "run method did not execute properly")
+
+class Test_Main_Setup(unittest.TestCase):
+    def setUp(self):
+        self.verse1 = Verse("2 drachmae")
+        self.verse2 = Verse("2 drachmae", "metric")
+        self.d_verse1 = Discombibleator(self.verse1)
+        self.d_verse2 = Discombibleator(self.verse2)
+        self.full_pipeline_test1 = Discombibleator(Verse("The 3 marble columns"
+            " were a long cubit wide and 52 cubits tall at"
+            " 3 days' journey away.")).__run__()
+        #self.full_pipeline_test2 = Discombibleator(Verse("And on the second day,"
+            #" she took her bath at the ninth hour.")).__run__()
+        #self.full_pipeline_test3 = Discombibleator(Verse("At the eleventh hour"
+            #" he paid a golden talent to the emperor.",
+            #"metric")).__run__()
+
+    def test_initialization(self):
+        self.assertEqual(self.d_verse1.string,
+            "2 drachmae", "incorrect string")
+        self.assertEqual(self.d_verse1.units,
+            "imperial", "incorrect string")
+        self.assertEqual(self.d_verse2.units,
+            "metric", "incorrect string")
+
+    def test_run_method(self):
+        self.assertEqual(self.d_verse1.__run__(), "1.3 USD",
+            "values not converted correctly")
+
+    def test_full_pipeline(self):
+        self.assertEqual(self.full_pipeline_test1,
+            "The 3 marble columns were 20.4 long cubit wide and 78.0 feet tall.",
+            "Discombibleator did not run correctly")
+        self.assertEqual(self.full_pipeline_test2,
+            "And on the second day, she took her bath at the ninth hour.",
+            "Discombibleator did not run correctly")
+        self.assertEqual(self.full_pipeline_test3,
+            "At the eleventh hour he paid a golden talent to the emperor.",
+            "Discombibleator did not run correctly")
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
