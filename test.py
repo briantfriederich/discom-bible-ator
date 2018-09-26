@@ -123,7 +123,10 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
     def setUp(self):
         self.test_arr1 = ["12", "golden", "shekel"]
         self.test_arr2 = ["twelve", "golden", "shekel"]
-        self.test_arr3 = ["I", "drank", "a", "bath", "of", "wine", "."]
+        self.test_arr3 = ["I", "drank", "a", "bath", "of", "wine", "and",
+            "5", "homer", "of", "water", "."]
+        self.test_arr4 = ["12", "years", "ago", "I", "took", "a", "nice",
+            "long", "bath", "in", "a", "river", "."]
 
     def test_initialization(self):
         self.assertEqual(Find_Convert_Numbers(self.test_arr1).arr,
@@ -132,33 +135,78 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
          "imperial", "did not initialize units correctly")
         self.assertEqual(Find_Convert_Numbers(self.test_arr1, "metric").units,
             "metric", "did not initialize units correctly")
-        self.assertEqual(Find_Convert_Numbers(self.test_arr2).num_mw_match, [],
-            "class did not initialize correctly")
 
-    def test_represents_int(self):
-        self.assertEqual(Find_Convert_Numbers.represents_int(self.test_arr1,
+    def test_represents_num(self):
+        self.assertEqual(Find_Convert_Numbers.represents_num(self.test_arr1,
         "12"), True, "Didn't recognize int")
-        self.assertEqual(Find_Convert_Numbers.represents_int(self.test_arr2,
+        self.assertEqual(Find_Convert_Numbers.represents_num(self.test_arr2,
         "twelve"), False, "Didn't execute correctly")
 
     def test_number_multiplier(self):
         self.assertEqual(Find_Convert_Numbers(self.test_arr1).number_multiplier(
             "70", "cubit"), "105.0", "did not multiply correctly")
         self.assertEqual(Find_Convert_Numbers(self.test_arr1,
-            "metric").number_multiplier("70", "cubit"), "32.004",
+            "metric").number_multiplier("70", "cubit"), "32.0",
             "did not multiply correctly")
         self.assertEqual(Find_Convert_Numbers(self.test_arr1).number_multiplier(
             "0", "talent"), "0.0", "did not multiply correctly")
 
-    def test_number_converter(self):
-        self.assertEqual(Find_Convert_Numbers.number_converter("12",
-            self.test_arr1, "shekel"), ["10.0", "golden", "shekel"],
-                "did not multiply correctly")
-        self.assertEqual(Find_Convert_Numbers.number_converter("a",
-            self.test_arr3, "bath"), ["I", "drank", "2.0", "bath", "of", "wine",
-            "."],"did not multiply correctly")
-        self.assertEqual(Find_Convert_Numbers.number_converter("twelve",
-            self.test_arr2, "shekel"), self.test_arr2, "converted something unneeded")
+    def test_convert_to_modern(self):
+        array_1 = Find_Convert_Numbers(self.test_arr1)
+        array_3 = Find_Convert_Numbers(self.test_arr3)
+        array_4 = Find_Convert_Numbers(self.test_arr4)
+        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_1),
+            ["4.8", "golden", "ounces"], "did not convert correctly")
+        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_3),
+            ["I", "drank", "5.9", "gallons", "of", "wine", "and", "295.0",
+            "gallons", "of", "water", "."],
+            "did not convert correctly")
+        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_4),
+            ["12", "years", "ago", "I", "took", "a", "nice", "long", "bath",
+            "in", "a", "river", "."], "did not convert correctly")
+
+    def test_run_method(self):
+        output1 = Find_Convert_Numbers(self.test_arr1).__run__()
+        output2 = Find_Convert_Numbers(self.test_arr2).__run__()
+        output3 = Find_Convert_Numbers(self.test_arr3).__run__()
+        output4 = Find_Convert_Numbers(self.test_arr4).__run__()
+
+        self.assertEqual(output1, ['4.8', 'golden', 'ounces'],
+            "did not match numbers correctly")
+        self.assertEqual(output3, ["I", "drank", "5.9", "gallons", "of", "wine",
+         "and", "295.0", "gallons", "of", "water", "."],
+            "did not match numbers correctly")
+        self.assertEqual(output4, self.test_arr4,
+            "did not match numbers correctly")
+        self.assertEqual(output2, ['twelve', 'golden', 'shekel'],
+            "did not match numbers correctly")
+
+class Test_Join_Elements(unittest.TestCase):
+    def setUp(self):
+        self.test_arr1 = ['4.8', 'golden', 'ounces']
+        self.test_arr2 = ["twelve", "golden", "shekel"]
+        self.test_arr3 = ["I", "drank", "5.9", "gallons", "of", "wine",
+         "and", "295.0", "gallons", "of", "water", "."]
+        self.test_arr4 = ["12", "years", "ago", "I", "took", "a", "nice",
+            "long", "bath", "in", "a", "river", "."]
+
+    def test_initialization(self):
+        self.assertEqual(Join_Elements(self.test_arr1).arr,
+            self.test_arr1, "array not initialized properly")
+        self.assertEqual(Join_Elements(self.test_arr2).output,
+            None, "output attribute not initialized properly")
+
+    def test_run_method(self):
+        self.assertEqual(Join_Elements(self.test_arr1).run(),
+            "4.8 golden ounces", "run method did not execute properly")
+        with self.assertRaises(ValueError):
+            Join_Elements(self.test_arr2).run()
+        self.assertEqual(Join_Elements(self.test_arr3).run(),
+            "I drank 5.9 gallons of wine and 295.0 gallons of water.",
+            "run method did not execute properly")
+        self.assertEqual(Join_Elements(self.test_arr4).run(),
+            "12 years ago I took a nice long bath in a river.",
+            "run method did not execute properly")
 
 if __name__ == '__main__':
     unittest.main()

@@ -165,10 +165,8 @@ class Find_Convert_Numbers(object):
         """
         self.arr = object
         self.units = units
-        self.num_mw_match = []
-        self.mw_num_match = []
 
-    def represents_int(self, s):
+    def represents_num(self, s):
         """Method checking whether an input is a string representation of an integer.
 
         args:
@@ -196,13 +194,12 @@ class Find_Convert_Numbers(object):
                 units
         """
         if self.units == "metric":
-            n = float(n) * float(measures['metric_multiplier'][measure_word])
+            n = round((float(n) * float(measures['metric_multiplier'][measure_word])), 2)
         else:
-            n = float(n) * float(measures['imperial_multiplier'][measure_word])
-        self.num_mw_match.append(measure_word)
+            n = round((float(n) * float(measures['imperial_multiplier'][measure_word])), 2)
         return str(n)
 
-    def number_converter(item, arr, j):
+    def number_converter(self, item, arr, j):
         """Method handling both integers and the words "the" and "an" before
         measure words, converting them to imperial or metric units
 
@@ -213,57 +210,37 @@ class Find_Convert_Numbers(object):
             arr (arr): array with numbers replaced with converted numbers
         """
         item_locator = arr.index(item)
-        if self.represents_int(item):
+        if self.represents_num(item):
             arr[item_locator] = self.number_multiplier(item, j)
-        elif unit in ("a", "an", "the", "A", "An", "The"):
-            if(arr.index(j) - unit_locator) in range(2):
-                arr[unit_locator] = self.number_multiplier(1, j)
+        elif item in ("a", "an", "the", "A", "An", "The"):
+            if(arr.index(j) - item_locator) in range(2):
+                arr[item_locator] = self.number_multiplier(1, j)
         return arr
 
-    def range_sensitizer(self):
-        """Method catching numbers separated from measure words by adjectives
-        or other filler words
+    def convert_to_modern(self):
+        """Method converting numbers and associated units to modern measurements
 
         args:
-            arr (arr): array to be processed
+            self
 
         returns:
-            arr (arr): array with original numbers converted to modern units
+            self.arr (arr): array with original numbers converted to modern units
         """
         for i, j in enumerate(self.arr):
             if j in measurement_roots.values():
                 if i <= 4:
-                    for unit in arr[:i]:
-                        self.arr = number_converter(unit, self.arr, j)
+                    for unit in self.arr[:i]:
+                        self.arr = self.number_converter(unit, self.arr, j)
+                        if self.represents_num(unit):
+                            self.arr[i] = measures[self.units][j]
+                        elif unit in ("a", "an", "the", "A", "An", "The"):
+                            self.arr[i] = measures[self.units][j]
                 else:
-                    for unit in arr[i-4:i]:
-                        self.arr = number_converter(unit, self.arr, j)
+                    for unit in self.arr[i-4:i]:
+                        self.arr = self.number_converter(unit, self.arr, j)
+                        if self.represents_num(unit):
+                            self.arr[i] = measures[self.units][j]
         return self.arr
-
-
-    def measure_word_converter(self):
-        """Method converting measure words into Imperial or Metric measures.
-
-        Returns:
-            (str): string of corresponding metric or imperial measure
-        """
-        for i, j in enumerate(self.arr):
-            if j in measurement_roots.values():
-                mw_num_match.append(j)
-                self.arr[i] = measures[self.units][j]
-        return self.arr
-
-    def match_num_mw(self):
-        """Method checking that measure words used to convert numbers correspond
-        to measure words converted to modern versions
-        """
-        try:
-            self.num_mw_match == self.mw_num_match
-        except AssertionError:
-            print("Measure words and corresponding numbers", \
-                    "don't match:\n{}".format(self.num_mw_match,
-                    self.mw_num_match))
-                    #got rid of break here, circle back
 
     def __run__(self):
         """Method running consecutive methods within Find_Convert_Numbers class
@@ -272,12 +249,8 @@ class Find_Convert_Numbers(object):
             arr (arr): array with measurement elements converted into modern
                 units
         """
-        nums_converted = self.range_sensitizer(self.arr)
-        mws_converted = self.measure_word_converter(nums_converted)
-        self.match_num_mw(mws_converted)
-        self.arr = mws_converted
+        self.convert_to_modern()
         return self.arr
-
 
 class Join_Elements(object):
 
@@ -294,8 +267,23 @@ class Join_Elements(object):
         args:
             arr (arr): array to be joined into continuous string
         """
-        self.arr = object.string
+        self.arr = object
         self.output = None
+
+    def represents_float(self, s):
+        """Method checking whether an input is a string representation of an integer.
+
+        args:
+            s (string): string item to be checked
+
+        returns:
+            (bool): whether the input is a string representation of an integer
+        """
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
     def run(self):
         """Method running Join_Elements class
@@ -304,7 +292,12 @@ class Join_Elements(object):
             output (str): string of input verse with Ancient Hebrew measurements
             converted into modern measurements.
         """
-        for element in self.arr:
+        has_numbers = False
+        for unit in self.arr:
             self.output = "".join([" "+i if not i.startswith("'") and \
-            i not in ef_lists().punctuation else i for i in arr]).strip()
+            i not in ref_lists().punctuation else i for i in self.arr]).strip()
+            if self.represents_float(unit):
+                has_numbers = True
+        if has_numbers == False:
+            raise ValueError("Numeric digits of numbers to be converted not found in input text:\n{}".format(self.arr))
         return self.output
