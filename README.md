@@ -77,7 +77,7 @@ Discombibleator(Verse("my verse here", "metric"))
 
 This tool takes in passages, not verse references. Therefore, something like *"2 homers of oil"* will execute correctly, whereas *"Genesis 1:1"* will not. Additionally:
 * *Bath*,*reed*, and *finger* are ancient units of measurement. There's no way currently for this tool to distinguish between synonyms, so references to water baths, plant reeds, and hand fingers will currently change their names to gallons and inches respectively.
-* This tool only recognizes numbers written in digits. For example, *"12 bekahs"* will convert correctly, but 
+* This tool only recognizes numbers written in digits. For example, *"12 bekahs"* will convert correctly, but
 *"twelve bekahs"* will not. Although the name *"bekah"* will change, the string *"twelve"* will not, rendering an incorrect output. In most cases, this will throw a helpful error, indicating the tool has not found a valid measurement in the input.
 * **On the other hand, this tool does except "the", "an", and "a" in front of measure words.** This is meant to make the tool more robust if the user inputs something like *"A Sabbath day's journey"* or *"A talent of gold"*, but best practice is still to put in *"1 Sabbath day's journey"* or *"1 talent of gold"*.
 
