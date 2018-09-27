@@ -16,29 +16,29 @@ class Discombibleator(Verse):
         Args:
             string (str)
             units (str)
+            arr (arr)
 
         Attributes:
-            string (str): String of text to be converted into modern measurements.
-            arr (arr): Class' string attribute word-tokenized through NLTK.
+            string (str): String of text to be converted into modern
+                measurements.
+            arr (arr): empty array to be replaced with string's content as it is
+                processed through the class' methods. This keeps the original
+                string accessible even after processing has occured.
             units (string): String indicating whether output units will be in
-                Imperial or Metric units. Default is Imperial units.
-            measurement_found (bool): Boolean indicating a valid Ancient Hebrew
-                measurement has been found in self.arr and can be processed.
-            lemmatized (bool): Boolean indicating the lemitization step has been
-                executed.
-            nums_converted (bool): Boolean indicating numbers have been converted.
-            mw_converted (bool): Boolean indicating measure words have been converted.
-            multiword signifiers (arr): Array of words signaling the possible
-                presence of multiword measure words tokenized into multiple items.
-            ordinal_times (arr): Array of words indicating a specific time.
-            punctuation (arr): List if punctuation to ease detokenizing sentences.
+                Imperial or Metric units. Default is Imperial units
+            __run__: method running the string through the processing steps as
+                new objest self.arr
         """
         self.string = object.string
         self.units = object.units
         self.arr = None
 
     def __run__(self):
-        """Method running algorithms from algs.py on inputs from inputs.py"""
+        """Method running algorithms from algs.py on inputs from inputs.py
+
+        returns:
+            string identical to input verse, but with unit names and associated values converted to metric or imperial mesaurements
+        """
         self.arr = Tokenize(self.string).__run__()
         self.arr = Concat_Multiword(self.arr).__run__()
         self.arr = Has_Measure_Words(self.arr).__run__()

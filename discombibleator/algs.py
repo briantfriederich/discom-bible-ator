@@ -3,6 +3,7 @@ import pandas as pd
 from nltk.tokenize import word_tokenize
 from .reference_lists import Reference_Lists as ref_lists
 
+# various reference dictionaries to be accessed later
 measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
                         squeeze=True).to_dict()
 
@@ -12,7 +13,6 @@ measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0,
 multiword_values = pd.read_csv('data/multiword_values.csv', header=0,
                                 index_col=1, squeeze=True).to_dict()
 
-
 class Tokenize(object):
 
     """Class tokenizing object with nltk
@@ -20,6 +20,9 @@ class Tokenize(object):
     attributes:
         __init__
         run
+
+    returns:
+        self.arr (arr): input string tokenized by word
 
     """
 
@@ -61,7 +64,9 @@ class Concat_Multiword(object):
 
     def __run__(self):
         """Method to concatenate multi-word measure words into one Array
-        item
+        item. The method searches for signifiers of potential multiword measure
+        measurewords present, then confirms and standardizes the word as one
+        token.
 
         returns:
             arr (arr): array of words with multiword tokens joined
@@ -118,7 +123,6 @@ class Has_Measure_Words(object):
             return self.arr
         else:
             raise ValueError("Measurement to be converted not found in input text:\n{}".format(self.arr))
-            # no longer breaking: check if we have problems with invalid sentences
 
 class Lemmatize_Measure_Words(object):
 
@@ -134,8 +138,15 @@ class Lemmatize_Measure_Words(object):
         self.arr = object
 
     def __run__(self):
-        self.arr[:] = [measurement_roots[word] if word in measurement_roots else word for word in self.arr]
-        #self.arr[:] = [measurement_roots[word] if word in measurement_roots else word for word in self.arr]
+        """Method turning measure words into a standard form for later lookup of
+        conversion rates
+
+        returns:
+            self.arr (arr): array with measure words standardized to form found
+                in measures.csv
+        """
+        self.arr[:] = [measurement_roots[word] if word in measurement_roots \
+            else word for word in self.arr]
         return self.arr
 
 class Find_Convert_Numbers(object):
@@ -151,21 +162,20 @@ class Find_Convert_Numbers(object):
         Measure_Word_Converter
         Match_Num_MW
         __run__
+
     """
 
     def __init__(self, object, units ="imperial"):
         """Method initializing Find_Convert_Numbers
 
         args:
-            arr (arr)
+            object (obj)
+            units (str)
 
         attributes:
             arr (arr): array to be processed
             units (str): string indication whether measurement are to be given
                 in metric or imperial units. Default in imperial
-            num_mw_match & mw_num_match (arr): array of Ancient Hebrew measure
-                words Number_Converter and Measure_Word_Converter use, for
-                comparison
         """
         self.arr = object
         self.units = units
@@ -208,8 +218,10 @@ class Find_Convert_Numbers(object):
         measure words, converting them to imperial or metric units
 
         args:
-            arr (arr): array to be examined for ints or variations on "a" and
-                "the"
+            item (str): string of int to be converted into int
+            arr (arr): array in which item and j are located
+            j (str): measure word in array
+
         returns:
             arr (arr): array with numbers replaced with converted numbers
         """
@@ -223,9 +235,7 @@ class Find_Convert_Numbers(object):
 
     def nums_to_modern(self):
         """Method converting numbers and associated units to modern measurements
-
-        args:
-            self
+        within a range of 3 places in array
 
         returns:
             self.arr (arr): array with original numbers converted to modern units
@@ -244,18 +254,34 @@ class Find_Convert_Numbers(object):
         """Method running consecutive methods within Find_Convert_Numbers class
 
         returns:
-            arr (arr): array with measurement elements converted into modern
+            arr (arr): array with measurement values converted into modern
                 units
         """
         self.nums_to_modern()
         return self.arr
 
 class Convert_Measure_Words(object):
+
+    """Class converting measure words from Ancient Hebrew units to modern units
+
+    args:
+        object (obj)
+        units (str)
+
+    attributes:
+        __init__
+        __run__
+
+    """
+
     def __init__(self, object, units):
         self.arr = object
         self.units = units
 
     def __run__(self):
+        """Method replacing Ancient Hebrew measure words with their imperial or
+        metric counterparts, in line with unit specification
+        """
         for i, j in enumerate(self.arr):
             if j in measurement_roots.values():
                 self.arr[i] = measures[self.units][j]
@@ -267,26 +293,24 @@ class Join_Elements(object):
 
     attributes:
         __init__
+        represents_float
+        __run__
 
     """
 
     def __init__(self, object):
-        """Method initializing Join_Elements class
-
-        args:
-            arr (arr): array to be joined into continuous string
-        """
         self.arr = object
         self.output = None
 
     def represents_float(self, s):
-        """Method checking whether an input is a string representation of an integer.
+        """Method checking whether an input is a string representation of a
+        float.
 
         args:
             s (string): string item to be checked
 
         returns:
-            (bool): whether the input is a string representation of an integer
+            (bool): whether the input is a string representation of an float
         """
         try:
             float(s)
@@ -297,20 +321,24 @@ class Join_Elements(object):
 
 
     def __run__(self):
-        """Method running Join_Elements class
+        """Method running Join_Elements class. If no elements that could have
+        been converted are found, method raises an error.
 
         returns:
             output (str): string of input verse with Ancient Hebrew measurements
             converted into modern measurements.
         """
+        #has_numbers ensures Value Error will be raised unless method finds
+        #indication of converted measures
         has_numbers = False
         for unit in self.arr:
-            if self.represents_float(unit):
+            if self.represents_float(unit): #indicative of converted numbers
                 has_numbers = True
-            elif ("PM" or "AM" or "noon") in unit:
+            elif ("PM" or "AM" or "noon") in unit: #indicative of converted times
                 has_numbers = True
             self.output = "".join([" "+i if not i.startswith("'") and \
             i not in ref_lists().punctuation else i for i in self.arr]).strip()
         if has_numbers == False:
-            raise ValueError("digits of numbers to be converted not found in input text:\n{}".format(self.arr))
+            raise ValueError("digits of numbers to be converted not found in"
+            "input text:\n{}".format(self.arr))
         return self.output
