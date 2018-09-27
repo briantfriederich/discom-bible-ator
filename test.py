@@ -127,7 +127,7 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
         self.test_arr3 = ["I", "drank", "a", "bath", "of", "wine", "and",
             "5", "homer", "of", "water", "."]
         self.test_arr4 = ["12", "years", "ago", "I", "took", "a", "nice",
-            "long", "bath", "in", "a", "river", "."]
+        "long", "walk", "along", "a", "river", "."]
 
     def test_initialization(self):
         self.assertEqual(Find_Convert_Numbers(self.test_arr1).arr,
@@ -157,14 +157,14 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
         array_3 = Find_Convert_Numbers(self.test_arr3)
         array_4 = Find_Convert_Numbers(self.test_arr4)
         self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_1),
-            ["4.8", "golden", "ounces"], "did not convert correctly")
+            ["4.8", "golden", "shekel"], "did not convert correctly")
         self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_3),
-            ["I", "drank", "5.9", "gallons", "of", "wine", "and", "295.0",
-            "gallons", "of", "water", "."],
+            ["I", "drank", "5.9", "bath", "of", "wine", "and", "295.0",
+            "homer", "of", "water", "."],
             "did not convert correctly")
         self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_4),
-            ["12", "years", "ago", "I", "took", "a", "nice", "long", "bath",
-            "in", "a", "river", "."], "did not convert correctly")
+            ["12", "years", "ago", "I", "took", "a", "nice", "long", "walk",
+            "along", "a", "river", "."], "did not convert correctly")
 
     def test_run_method(self):
         output1 = Find_Convert_Numbers(self.test_arr1).__run__()
@@ -172,10 +172,10 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
         output3 = Find_Convert_Numbers(self.test_arr3).__run__()
         output4 = Find_Convert_Numbers(self.test_arr4).__run__()
 
-        self.assertEqual(output1, ['4.8', 'golden', 'ounces'],
+        self.assertEqual(output1, ['4.8', 'golden', 'shekel'],
             "did not match numbers correctly")
-        self.assertEqual(output3, ["I", "drank", "5.9", "gallons", "of", "wine",
-         "and", "295.0", "gallons", "of", "water", "."],
+        self.assertEqual(output3, ["I", "drank", "5.9", "bath", "of", "wine",
+         "and", "295.0", "homer", "of", "water", "."],
             "did not match numbers correctly")
         self.assertEqual(output4, self.test_arr4,
             "did not match numbers correctly")
@@ -199,7 +199,7 @@ class Test_Join_Elements(unittest.TestCase):
 
     def test_run_method(self):
         self.assertEqual(Join_Elements(self.test_arr1).__run__(),
-            "4.8 golden ounces", "run method did not execute properly")
+            "4.8 golden ounces", "run method did not execute properly")   
         with self.assertRaises(ValueError):
             Join_Elements(self.test_arr2).__run__()
         self.assertEqual(Join_Elements(self.test_arr3).__run__(),
@@ -215,14 +215,13 @@ class Test_Main_Setup(unittest.TestCase):
         self.verse2 = Verse("2 drachmae", "metric")
         self.d_verse1 = Discombibleator(self.verse1)
         self.d_verse2 = Discombibleator(self.verse2)
-        self.full_pipeline_test1 = Discombibleator(Verse("The 3 marble columns"
-            " were a long cubit wide and 52 cubits tall at"
-            " 3 days' journey away.")).__run__()
-        #self.full_pipeline_test2 = Discombibleator(Verse("And on the second day,"
-            #" she took her bath at the ninth hour.")).__run__()
-        #self.full_pipeline_test3 = Discombibleator(Verse("At the eleventh hour"
-            #" he paid a golden talent to the emperor.",
-            #"metric")).__run__()
+        self.full_pipeline_test1 = Discombibleator(Verse("The marble columns"
+            " were a long cubit wide and 52 cubits tall.")).__run__()
+        self.full_pipeline_test2 = Discombibleator(Verse("And on the second day,"
+            " she woke at the ninth hour.")).__run__()
+        self.full_pipeline_test3 = Discombibleator(Verse("At the eleventh hour"
+            " he paid a golden talent to the emperor.",
+            "metric")).__run__()
 
     def test_initialization(self):
         self.assertEqual(self.d_verse1.string,
@@ -238,13 +237,13 @@ class Test_Main_Setup(unittest.TestCase):
 
     def test_full_pipeline(self):
         self.assertEqual(self.full_pipeline_test1,
-            "The 3 marble columns were 20.4 long cubit wide and 78.0 feet tall.",
+            "The marble columns were 20.4 inches wide and 78.0 feet tall.",
             "Discombibleator did not run correctly")
         self.assertEqual(self.full_pipeline_test2,
-            "And on the second day, she took her bath at the ninth hour.",
+            "And on the second day, she woke at 3:00 PM.",
             "Discombibleator did not run correctly")
         self.assertEqual(self.full_pipeline_test3,
-            "At the eleventh hour he paid a golden talent to the emperor.",
+            "At 5:00 PM he paid 34.02 golden kg to the emperor.",
             "Discombibleator did not run correctly")
 
 

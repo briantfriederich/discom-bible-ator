@@ -44,4 +44,5 @@ class Discombibleator(Verse):
         self.arr = Has_Measure_Words(self.arr).__run__()
         self.arr = Lemmatize_Measure_Words(self.arr).__run__()
         self.arr = Find_Convert_Numbers(self.arr, self.units).__run__()
+        self.arr = Convert_Measure_Words(self.arr, self.units).__run__()
         return Join_Elements(self.arr).__run__()

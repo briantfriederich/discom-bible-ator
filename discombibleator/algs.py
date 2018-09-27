@@ -82,7 +82,6 @@ class Concat_Multiword(object):
                             self.arr[i-1:i+1] = ["long cubits"]
         return self.arr
 
-
 class Has_Measure_Words(object):
 
     """Method checking whether a valid measurement can be found in the input.
@@ -218,7 +217,7 @@ class Find_Convert_Numbers(object):
         if self.represents_num(item):
             arr[item_locator] = self.number_multiplier(item, j)
         elif item in ("a", "an", "the", "A", "An", "The"):
-            if(arr.index(j) - item_locator) in range(2):
+            if(arr.index(j) - item_locator) in range(3):
                 arr[item_locator] = self.number_multiplier(1, j)
         return arr
 
@@ -248,21 +247,19 @@ class Find_Convert_Numbers(object):
             arr (arr): array with measurement elements converted into modern
                 units
         """
-        self.convert_to_modern()
+        self.nums_to_modern()
         return self.arr
 
 class Convert_Measure_Words(object):
-    def __init__(self, object):
+    def __init__(self, object, units):
         self.arr = object
+        self.units = units
 
     def __run__(self):
         for i, j in enumerate(self.arr):
             if j in measurement_roots.values():
-"""                        if self.represents_num(unit):
-                            self.arr[i] = measures[self.units][j]
-                        elif unit in ("a", "an", "the", "A", "An", "The"):
-                            self.arr[i] = measures[self.units][j]
-                            """
+                self.arr[i] = measures[self.units][j]
+        return self.arr
 
 class Join_Elements(object):
 
@@ -297,6 +294,8 @@ class Join_Elements(object):
         except ValueError:
             return False
 
+
+
     def __run__(self):
         """Method running Join_Elements class
 
@@ -308,7 +307,7 @@ class Join_Elements(object):
         for unit in self.arr:
             if self.represents_float(unit):
                 has_numbers = True
-            elif unit in multiword_values:
+            elif ("PM" or "AM" or "noon") in unit:
                 has_numbers = True
             self.output = "".join([" "+i if not i.startswith("'") and \
             i not in ref_lists().punctuation else i for i in self.arr]).strip()
