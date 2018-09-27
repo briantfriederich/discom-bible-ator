@@ -47,7 +47,7 @@ That's it! The discombibleator is not available for you to start using in Jupyte
 
 ### Running Tests
 
-Tests are available in the test file. To run them, simply type:
+Tests are available in the test file. To run them, simply change your directory to the package files and type:
 
 ```
 python -m unittest
