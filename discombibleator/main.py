@@ -33,7 +33,7 @@ class Discombibleator(Verse):
         self.units = object.units
         self.arr = None
 
-    def __run__(self):
+    def run(self):
         """Method running algorithms from algs.py on inputs from inputs.py
 
         returns:

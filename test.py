@@ -5,6 +5,7 @@ from discombibleator.reference_lists import  Reference_Lists as ref_list
 from discombibleator.algs import *
 from discombibleator.main import *
 
+
 class Test_Inputs(unittest.TestCase):
     def setUp(self):
         self.verse1 = Verse("2 drachmae")
@@ -216,12 +217,12 @@ class Test_Main_Setup(unittest.TestCase):
         self.d_verse1 = Discombibleator(self.verse1)
         self.d_verse2 = Discombibleator(self.verse2)
         self.full_pipeline_test1 = Discombibleator(Verse("The marble columns"
-            " were a long cubit wide and 52 cubits tall.")).__run__()
+            " were a long cubit wide and 52 cubits tall.")).run()
         self.full_pipeline_test2 = Discombibleator(Verse("And on the second day,"
-            " she woke at the ninth hour.")).__run__()
+            " she woke at the ninth hour.")).run()
         self.full_pipeline_test3 = Discombibleator(Verse("At the eleventh hour"
             " he paid a golden talent to the emperor.",
-            "metric")).__run__()
+            "metric")).run()
 
     def test_initialization(self):
         self.assertEqual(self.d_verse1.string,
@@ -232,7 +233,7 @@ class Test_Main_Setup(unittest.TestCase):
             "metric", "incorrect string")
 
     def test_run_method(self):
-        self.assertEqual(self.d_verse1.__run__(), "1.3 USD",
+        self.assertEqual(self.d_verse1.run(), "1.3 USD",
             "values not converted correctly")
 
     def test_full_pipeline(self):
