@@ -57,7 +57,19 @@ The tool's been tested before release, so these tests should all run without an 
 
 ## Using the tool
 
-To use the tool, while in Python, type the following with your passage or measurement inside the "Verse" class parentheses:
+To use the tool, run python in your terminal with the following command (unless you';re running this in a notebook or text editor):
+
+```
+python
+```
+
+Then, import the package's tools with the following command:
+
+```
+from discombibleator import *
+```
+
+Type the following with your passage or measurement inside the "Verse" class parentheses:
 
 ```
 Discombibleator(Verse("my verse here"))
