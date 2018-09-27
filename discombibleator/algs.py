@@ -1,16 +1,24 @@
 import numpy as np
 import pandas as pd
+import pkg_resources
 from nltk.tokenize import word_tokenize
 from .reference_lists import Reference_Lists as ref_lists
 
+path1 = "data/measures.csv"
+filepath1 = pkg_resources.resource_filename(__name__, path1)
+path2 = "data/measurement_roots.csv"
+filepath2 = pkg_resources.resource_filename(__name__, path2)
+path3 = "data/multiword_values.csv"
+filepath3 = pkg_resources.resource_filename(__name__, path3)
+
 # various reference dictionaries to be accessed later
-measures = pd.read_csv("measures.csv", header = 0, index_col = 0,
+measures = pd.read_csv(filepath1, header = 0, index_col = 0,
                         squeeze=True).to_dict()
 
-measurement_roots = pd.read_csv('measurement_roots.csv', header=0,
+measurement_roots = pd.read_csv(filepath2, header=0,
                                 index_col=1, squeeze=True).to_dict()
 
-multiword_values = pd.read_csv('multiword_values.csv', header=0,
+multiword_values = pd.read_csv(filepath3, header=0,
                                 index_col=1, squeeze=True).to_dict()
 
 class Tokenize(object):
@@ -143,7 +151,7 @@ class Lemmatize_Measure_Words(object):
 
         returns:
             self.arr (arr): array with measure words standardized to form found
-                in measures.csv
+                in measures
         """
         self.arr[:] = [measurement_roots[word] if word in measurement_roots \
             else word for word in self.arr]
