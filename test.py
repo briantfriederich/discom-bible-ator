@@ -199,7 +199,7 @@ class Test_Join_Elements(unittest.TestCase):
 
     def test_run_method(self):
         self.assertEqual(Join_Elements(self.test_arr1).__run__(),
-            "4.8 golden ounces", "run method did not execute properly")   
+            "4.8 golden ounces", "run method did not execute properly")
         with self.assertRaises(ValueError):
             Join_Elements(self.test_arr2).__run__()
         self.assertEqual(Join_Elements(self.test_arr3).__run__(),
@@ -246,50 +246,5 @@ class Test_Main_Setup(unittest.TestCase):
             "At 5:00 PM he paid 34.02 golden kg to the emperor.",
             "Discombibleator did not run correctly")
 
-
-
-
 if __name__ == '__main__':
     unittest.main()
-
-"""
-y = Verse("2 drachmae")
-y.Return_String()
-
-x = Biblical_Measurement(y.Return_String())
-x.Concat_Multiword()
-x.Has_Measure_Words()
-x.Lemmatize_Measure_Words()
-x.Find_Convert_Numbers()
-x.Convert_Measure_Words()
-x.Join_Elements()
-
-
-x = Biblical_Measurement("It was 12 cubits tall and we saw it during the ninth hour.")
-x.concat_multiword()
-x.has_measure_words()
-x.lemmatize_measure_words()
-x.find_convert_numbers()
-x.convert_measure_words()
-x.join_elements()
-
-
-
-x = Biblical_Measurement("It was 12 or 13 cubits tall and we saw it during the ninth hour")
-x.concat_multiword()
-x.has_measure_words()
-x.lemmatize_measure_words()
-x.find_convert_numbers()
-x.convert_measure_words()
-x.join_elements()
-
-
-
-x = Biblical_Measurement("The bath of wine cost 12 or 13 talents of gold and a denarius; and we saw it during the ninth hour.")
-x.concat_multiword()
-x.has_measure_words()
-x.lemmatize_measure_words()
-x.find_convert_numbers()
-x.convert_measure_words()
-x.join_elements()
-"""
