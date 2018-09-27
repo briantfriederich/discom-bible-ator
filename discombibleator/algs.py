@@ -222,7 +222,7 @@ class Find_Convert_Numbers(object):
                 arr[item_locator] = self.number_multiplier(1, j)
         return arr
 
-    def convert_to_modern(self):
+    def nums_to_modern(self):
         """Method converting numbers and associated units to modern measurements
 
         args:
@@ -236,15 +236,9 @@ class Find_Convert_Numbers(object):
                 if i <= 3:
                     for unit in self.arr[:i]:
                         self.arr = self.number_converter(unit, self.arr, j)
-                        if self.represents_num(unit):
-                            self.arr[i] = measures[self.units][j]
-                        elif unit in ("a", "an", "the", "A", "An", "The"):
-                            self.arr[i] = measures[self.units][j]
                 else:
                     for unit in self.arr[i-3:i]:
                         self.arr = self.number_converter(unit, self.arr, j)
-                        if self.represents_num(unit):
-                            self.arr[i] = measures[self.units][j]
         return self.arr
 
     def __run__(self):
@@ -256,6 +250,19 @@ class Find_Convert_Numbers(object):
         """
         self.convert_to_modern()
         return self.arr
+
+class Convert_Measure_Words(object):
+    def __init__(self, object):
+        self.arr = object
+
+    def __run__(self):
+        for i, j in enumerate(self.arr):
+            if j in measurement_roots.values():
+"""                        if self.represents_num(unit):
+                            self.arr[i] = measures[self.units][j]
+                        elif unit in ("a", "an", "the", "A", "An", "The"):
+                            self.arr[i] = measures[self.units][j]
+                            """
 
 class Join_Elements(object):
 

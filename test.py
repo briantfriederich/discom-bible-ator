@@ -152,17 +152,17 @@ class Test_Find_Convert_Numbers(unittest.TestCase):
         self.assertEqual(Find_Convert_Numbers(self.test_arr1).number_multiplier(
             "0", "talent"), "0.0", "did not multiply correctly")
 
-    def test_convert_to_modern(self):
+    def test_nums_to_modern(self):
         array_1 = Find_Convert_Numbers(self.test_arr1)
         array_3 = Find_Convert_Numbers(self.test_arr3)
         array_4 = Find_Convert_Numbers(self.test_arr4)
-        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_1),
+        self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_1),
             ["4.8", "golden", "ounces"], "did not convert correctly")
-        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_3),
+        self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_3),
             ["I", "drank", "5.9", "gallons", "of", "wine", "and", "295.0",
             "gallons", "of", "water", "."],
             "did not convert correctly")
-        self.assertEqual(Find_Convert_Numbers.convert_to_modern(array_4),
+        self.assertEqual(Find_Convert_Numbers.nums_to_modern(array_4),
             ["12", "years", "ago", "I", "took", "a", "nice", "long", "bath",
             "in", "a", "river", "."], "did not convert correctly")
 
