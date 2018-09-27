@@ -1,6 +1,7 @@
 README.md
 setup.cfg
 setup.py
+discombibleator/__init__.py
 discombibleator/algs.py
 discombibleator/inputs.py
 discombibleator/main.py

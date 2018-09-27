@@ -4,13 +4,13 @@ from nltk.tokenize import word_tokenize
 from .reference_lists import Reference_Lists as ref_lists
 
 # various reference dictionaries to be accessed later
-measures = pd.read_csv("data/measures.csv", header = 0, index_col = 0,
+measures = pd.read_csv("measures.csv", header = 0, index_col = 0,
                         squeeze=True).to_dict()
 
-measurement_roots = pd.read_csv('data/measurement_roots.csv', header=0,
+measurement_roots = pd.read_csv('measurement_roots.csv', header=0,
                                 index_col=1, squeeze=True).to_dict()
 
-multiword_values = pd.read_csv('data/multiword_values.csv', header=0,
+multiword_values = pd.read_csv('multiword_values.csv', header=0,
                                 index_col=1, squeeze=True).to_dict()
 
 class Tokenize(object):
