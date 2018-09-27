@@ -238,7 +238,7 @@ class Test_Main_Setup(unittest.TestCase):
 
     def test_full_pipeline(self):
         self.assertEqual(self.full_pipeline_test1,
-            "The marble columns were 20.4 inches wide and 78.0 feet tall.",
+            "The marble columns were 1.7 feet wide and 78.0 feet tall.",
             "Discombibleator did not run correctly")
         self.assertEqual(self.full_pipeline_test2,
             "And on the second day, she woke at 3:00 PM.",

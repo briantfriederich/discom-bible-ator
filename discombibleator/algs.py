@@ -79,9 +79,9 @@ class Concat_Multiword(object):
                     elif j in ("journey", "walk") and \
                     self.arr[i-2] in ("day", "days"):
                         if self.arr[i-3] in ("Sabbath", "sabbath"):
-                            self.arr[i-2:i+1] = ["sabbath day's walk"]
+                            self.arr[i-3:i+1] = ["sabbath day's journey"]
                         else:
-                            self.arr[i-1:i+1] = ["days' journey"]
+                            self.arr[i-2:i+1] = ["days' journey"]
                     elif j in ("cubit", "cubits"):
                         if self.arr[i-1] == 'long':
                             self.arr[i-1:i+1] = ["long cubits"]
