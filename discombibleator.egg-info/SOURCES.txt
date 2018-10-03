@@ -2,6 +2,9 @@ MANIFEST.in
 README.md
 setup.cfg
 setup.py
+data/measurement_roots.csv
+data/measures.csv
+data/multiword_values.csv
 discombibleator/__init__.py
 discombibleator/algs.py
 discombibleator/inputs.py
@@ -12,6 +15,3 @@ discombibleator.egg-info/SOURCES.txt
 discombibleator.egg-info/dependency_links.txt
 discombibleator.egg-info/not-zip-safe
 discombibleator.egg-info/top_level.txt
-discombibleator/data/measurement_roots.csv
-discombibleator/data/measures.csv
-discombibleator/data/multiword_values.csv
