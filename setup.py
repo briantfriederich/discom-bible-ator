@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='discombibleator',
-      version="1.91",
+      version="1.92",
       packages = ['discombibleator'],
       package_dir = {'discombibleator': 'discombibleator'},
       package_data={'discombibleator': ['data/*.csv']},
