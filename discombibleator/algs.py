@@ -5,11 +5,14 @@ from nltk.tokenize import word_tokenize
 from .reference_lists import Reference_Lists as ref_lists
 from pathlib import Path
 
-path1 = Path("../data/measures.csv").resolve()
+#path1 = Path("../data/measures.csv").resolve()
+path1 = Path(__file__).parent.parent.joinpath('data/measures.csv')
 
-path2 = Path("../data/measurement_roots.csv").resolve()
+#path2 = Path("../data/measurement_roots.csv").resolve()
+path2 = Path(__file__).parent.parent.joinpath('data/measurement_roots.csv')
 
-path3 = Path("../data/multiword_values.csv").resolve()
+#path3 = Path("../data/multiword_values.csv").resolve()
+path3 = Path(__file__).parent.parent.joinpath('data/multiword_values.csv')
 
 
 # various reference dictionaries to be accessed later
