@@ -93,9 +93,10 @@ This tool takes in passages, not verse references. Therefore, something like *"2
 *"twelve bekahs"* will not. Although the name *"bekah"* will change, the string *"twelve"* will not, rendering an incorrect output. In most cases, this will throw a helpful error, indicating the tool has not found a valid measurement in the input.
 * **On the other hand, this tool does except "the", "an", and "a" in front of measure words.** This is meant to make the tool more robust if the user inputs something like *"A Sabbath day's journey"* or *"A talent of gold"*, but best practice is still to put in *"1 Sabbath day's journey"* or *"1 talent of gold"*.
 
-## Author
+## Authors
 
-Brian Friederich - *Data Scientist, Booz Allen Hamilton*
+**Brian Friederich** - *Data Scientist, Booz Allen Hamilton* - Building maing algorithm and architecture
+**Michael Gasvoda** - *Data Scientist, Booz Allen Hamilton* - Connecting .csv files with main architecture, including .csv files in package download
 
 ## License
 
