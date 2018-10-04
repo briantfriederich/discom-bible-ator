@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='discombibleator',
-      version="2.3",
+      version="2.5",
       packages = ['discombibleator'],
       include_package_data=True,
       author = "Brian Friederich",
