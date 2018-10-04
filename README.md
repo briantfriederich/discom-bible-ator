@@ -72,7 +72,7 @@ from discombibleator import *
 Type the following with your passage or measurement inside the "Verse" class parentheses:
 
 ```
-Discombibleator(Verse("my verse here"))
+Discombibleator(Verse("my verse here")).run()
 ```
 
 And the tool should return the verse with ancient measurements converted to modern units.
@@ -82,7 +82,7 @@ And the tool should return the verse with ancient measurements converted to mode
 To get units in metric rather than imperial units, simply put `, "metric"` after the passage or measurement as follows:
 
 ```
-Discombibleator(Verse("my verse here", "metric"))
+Discombibleator(Verse("my verse here", "metric")).run()
 ```
 
 ### Limitations of Tool
